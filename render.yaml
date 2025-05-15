@@ -3,7 +3,7 @@ services:
     name: superset
     env: docker
     plan: free
-    region: arizona
+    region: oregon
     dockerfilePath: ./Dockerfile
     autoDeploy: true
     envGroups:

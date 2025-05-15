@@ -1,4 +1,8 @@
 FROM apache/superset:latest
 
-# Optional: expose default port
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 8088
+
+ENTRYPOINT ["/entrypoint.sh"]
