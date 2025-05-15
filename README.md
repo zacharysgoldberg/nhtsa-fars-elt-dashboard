@@ -4,8 +4,9 @@
 
 - **Data Extraction & Loading:**
 
-  - PostgreSQL database hosted on an Azure VM running in Docker for storing raw and processed FARS data.
+  - PostgreSQL database
   - Automated ETL pipeline scripts extract and load raw data into the database.
+  - Using Azure Blob Storage for CSV raw and processed data files
 
 - **Data Transformation with dbt:**
 
