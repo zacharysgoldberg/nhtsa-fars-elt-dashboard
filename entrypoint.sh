@@ -10,5 +10,5 @@ superset fab create-admin --username admin --password admin --firstname Admin --
 # Initialize Superset
 superset init
 
-# Run Superset server
-exec superset run -p 8088 --with-threads --reload --debugger
+# Run Superset server listening on all interfaces
+exec superset run -h 0.0.0.0 -p 8088 --with-threads --reload --debugger
