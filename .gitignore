@@ -4,5 +4,5 @@ venv/
 .vscode/
 .env
 elt/data/raw/
-elt/data/raw/fars_data
+elt/data/raw/fars_data/
 elt/data/processed/fars_data/
