@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: superset
+    env: docker
+    plan: free
+    region: arizona
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envGroups:
+      - superset_env
+    envVars:
+      - key: SUPERSET_SECRET_KEY
+        value: changeme-secret-key

@@ -1,0 +1,58 @@
+[0m15:02:45.675256 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000234CE6C2460>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000234D0429F10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000234D0429D00>]}
+
+
+============================== 15:02:45.678251 | 2e80e913-550d-4dda-980f-664b20399fb3 ==============================
+[0m15:02:45.678251 [info ] [MainThread]: Running with dbt=1.9.4
+[0m15:02:45.679210 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'fail_fast': 'False', 'version_check': 'True', 'log_path': 'logs', 'debug': 'False', 'profiles_dir': 'C:\\Users\\Goldb\\.dbt', 'use_colors': 'True', 'use_experimental_parser': 'False', 'empty': 'None', 'quiet': 'False', 'no_print': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'invocation_command': 'dbt init nhtsa_dbt_project', 'static_parser': 'True', 'introspect': 'True', 'target_path': 'None', 'log_format': 'default', 'send_anonymous_usage_stats': 'True'}
+[0m15:02:45.698665 [debug] [MainThread]: Starter project path: C:\Users\Goldb\Desktop\Repos\NHTSA-complaints-analytics-workflow\venv\lib\site-packages\dbt\include\starter_project
+[0m15:02:45.721566 [info ] [MainThread]: 
+Your new dbt project "nhtsa_dbt_project" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m15:02:45.722566 [info ] [MainThread]: Setting up your profile.
+[0m15:02:47.941443 [debug] [MainThread]: Command `dbt init` succeeded at 15:02:47.941443 after 2.35 seconds
+[0m15:02:47.942488 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000234CE6C2460>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000234D0429CA0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000234D03DFA30>]}
+[0m15:02:47.942488 [debug] [MainThread]: Flushing usage events
+[0m15:02:48.281690 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m16:10:05.409260 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021BC2704460>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021BC4469DF0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021BC4469BE0>]}
+
+
+============================== 16:10:05.413262 | 58bdd960-495f-4727-8715-5af117770769 ==============================
+[0m16:10:05.413262 [info ] [MainThread]: Running with dbt=1.9.4
+[0m16:10:05.414261 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'version_check': 'True', 'fail_fast': 'False', 'log_path': 'logs', 'profiles_dir': 'C:\\Users\\Goldb\\.dbt', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'empty': 'None', 'log_format': 'default', 'introspect': 'True', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'invocation_command': 'dbt clean', 'target_path': 'None', 'static_parser': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m16:10:05.415297 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\Goldb\Desktop\Repos\NHTSA-complaints-analytics-workflow\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m16:10:05.416262 [debug] [MainThread]: Command `dbt clean` failed at 16:10:05.416262 after 0.08 seconds
+[0m16:10:05.416262 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021BC2704460>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021BC4469700>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021BC44696D0>]}
+[0m16:10:05.417299 [debug] [MainThread]: Flushing usage events
+[0m16:10:05.788297 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m16:10:09.535624 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000146A0FC4430>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000146A1D2AF10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000146A1D2AD00>]}
+
+
+============================== 16:10:09.538678 | b8ada8ab-6b97-40bf-b7f5-714d346f7db0 ==============================
+[0m16:10:09.538678 [info ] [MainThread]: Running with dbt=1.9.4
+[0m16:10:09.539667 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': 'C:\\Users\\Goldb\\.dbt', 'fail_fast': 'False', 'debug': 'False', 'log_path': 'logs', 'version_check': 'True', 'warn_error': 'None', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'empty': 'False', 'log_format': 'default', 'static_parser': 'True', 'invocation_command': 'dbt run', 'introspect': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'send_anonymous_usage_stats': 'True'}
+[0m16:10:09.540627 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\Goldb\Desktop\Repos\NHTSA-complaints-analytics-workflow\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m16:10:09.541626 [debug] [MainThread]: Command `dbt run` failed at 16:10:09.541626 after 0.08 seconds
+[0m16:10:09.542669 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000146A0FC4430>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000146A1D2AD00>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000146A1D2AFD0>]}
+[0m16:10:09.542669 [debug] [MainThread]: Flushing usage events
+[0m16:10:09.890437 [debug] [MainThread]: An error was encountered while trying to flush usage events

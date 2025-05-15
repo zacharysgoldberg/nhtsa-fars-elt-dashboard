@@ -1,0 +1,378 @@
+version: 2
+
+models:
+  - name: stg_accident
+    description: Staging model for accident data from the main source table.
+    columns:
+      - name: st_case
+        description: Unique identifier for the accident case.
+        tests:
+          - unique
+          - not_null
+      - name: state
+        description: State where the accident occurred.
+      - name: county
+        description: County where the accident occurred.
+      - name: city
+        description: City or town of the accident.
+      - name: year
+        description: Year of the accident.
+      - name: month
+        description: Month of the accident.
+      - name: day
+        description: Day of the month when the accident occurred.
+      - name: hour
+        description: Hour (0-23) when the accident occurred.
+      - name: weather
+        description: Weather conditions during the accident.
+      - name: light_condition
+        description: Light conditions during the accident.
+      - name: fatalities
+        description: Number of fatalities in the accident.
+
+  - name: stg_vehicle
+    description: Staging model for vehicle data, includes injuries, deaths, and vehicle metadata.
+    columns:
+      - name: vehicle_id
+        description: Primary key of the vehicle.
+        tests: [unique, not_null]
+      - name: accident_id
+        description: Foreign key to the accident table.
+        tests: [not_null]
+      - name: year
+        description: Year of the accident.
+      - name: make
+        description: Vehicle make.
+      - name: model
+        description: Vehicle model.
+      - name: deaths
+        description: Number of deaths associated with this vehicle.
+      - name: injuries
+        description: Number of injuries associated with this vehicle.
+      - name: vehicle_type
+        description: Type of vehicle.
+      - name: rollovers
+        description: Number of rollovers in this vehicle.
+
+  - name: int_accident_vehicle_joined
+    description: |
+      This intermediate model joins accident data with vehicle data. 
+      It provides a comprehensive view of each vehicle involved in an accident, including key attributes like vehicle make, year, speed, and incident involvement details.
+    columns:
+      - name: accident_id
+        description: |
+          The unique identifier for each accident.
+      - name: st_case
+        description: |
+          The state case identifier for the accident.
+      - name: year
+        description: |
+          The year the accident occurred.
+      - name: state
+        description: |
+          The state where the accident took place.
+      - name: county
+        description: |
+          The county where the accident took place.
+      - name: num_occupants
+        description: |
+          The number of occupants in the vehicle involved in the accident.
+      - name: make
+        description: |
+          The make of the vehicle involved in the accident.
+      - name: model_year
+        description: |
+          The model year of the vehicle involved in the accident.
+      - name: travel_spd_mph
+        description: |
+          The travel speed of the vehicle in miles per hour at the time of the accident.
+      - name: is_hit_and_run
+        description: |
+          A boolean value indicating whether the accident was a hit-and-run.
+      - name: is_rollover
+        description: |
+          A boolean value indicating whether the vehicle rolled over during the accident.
+      - name: is_towed
+        description: |
+          A boolean value indicating whether the vehicle was towed after the accident.
+      - name: driver_alcohol_involved
+        description: |
+          A boolean value indicating whether alcohol was involved in the accident by the driver.
+
+  - name: int_accidents_with_fire
+    description: |
+      This model identifies accidents where a fire or explosion occurred. 
+      It aggregates the number of vehicles involved in these accidents and includes accident-level details like location, weather, and fatality count.
+    columns:
+      - name: accident_id
+        description: |
+          The unique identifier for each accident.
+      - name: st_case
+        description: |
+          The state case identifier for the accident.
+      - name: accident_year
+        description: |
+          The year the accident occurred.
+      - name: city
+        description: |
+          The city where the accident occurred.
+      - name: state
+        description: |
+          The state where the accident occurred.
+      - name: weather_condition
+        description: |
+          The weather conditions at the time of the accident.
+      - name: light_condition
+        description: |
+          The light conditions at the time of the accident.
+      - name: fatalities
+        description: |
+          The number of fatalities associated with the accident.
+      - name: vehicles_with_fire
+        description: |
+          The number of vehicles involved in the accident that had fire or explosion.
+
+  - name: fct_accident_by_weather
+    description: Aggregated count of accidents grouped by weather condition.
+    columns:
+      - name: weather_condition
+        description: Weather condition at the time of the accident.
+      - name: total_accidents
+        description: Total number of accidents under this weather condition.
+
+  - name: fct_fatal_accidents
+    description: |
+      This fact table provides a summary of fatal accidents by year, state, and county.
+      It aggregates the total number of accidents, total fatalities, and the average number of fatalities per accident for each region.
+    columns:
+      - name: year
+        description: |
+          The year in which the accident occurred.
+      - name: state
+        description: |
+          The state where the accident occurred.
+      - name: county
+        description: |
+          The county where the accident occurred.
+      - name: total_accidents
+        description: |
+          The total number of accidents with fatalities in each year, state, and county.
+      - name: total_fatalities
+        description: |
+          The total number of fatalities in accidents in each year, state, and county.
+      - name: avg_fatalities_per_accident
+        description: |
+          The average number of fatalities per accident in each year, state, and county.
+
+  - name: fct_vehicle_discrepencies
+    description: |
+      This table identifies vehicle discrepancies in multi-vehicle accidents. 
+      It highlights cases where the vehicle has no reported deaths, but the accident has fatalities.
+    columns:
+      - name: accident_id
+        description: |
+          The unique identifier for each accident.
+      - name: vehicle_id
+        description: |
+          The unique identifier for each vehicle involved in the accident.
+      - name: deaths
+        description: |
+          The number of deaths reported for the vehicle involved in the accident.
+      - name: fatalities
+        description: |
+          The total number of fatalities reported for the entire accident.
+
+  - name: mrt_accidents_by_time_of_day
+    description: |
+      This model aggregates accidents based on the time of day (e.g., morning rush hour, afternoon, night). It identifies trends related to the likelihood of accidents occurring during specific times.
+    columns:
+      - name: time_of_day
+        description: |
+          The time of day when the accident occurred (e.g., Morning Rush, Afternoon, Evening Rush, Night, Late Night).
+      - name: total_accidents
+        description: |
+          The total number of accidents that occurred during this time of day.
+      - name: total_fatalities
+        description: |
+          The total number of fatalities associated with accidents during this time of day.
+      - name: avg_fatalities_per_accident
+        description: |
+          The average number of fatalities per accident during this time of day.
+
+  - name: mrt_alcohol_related_accidents
+    description: >
+      Aggregated information about accidents involving at least one driver under the influence of alcohol.
+      Includes counts of alcohol-involved vehicles and summary statistics about those vehicles.
+    columns:
+      - name: accident_id
+        description: The unique identifier for the accident from the accident table.
+        tests:
+          - not_null
+          - unique
+
+      - name: alcohol_vehicle_count
+        description: Number of vehicles in the accident with a driver under the influence of alcohol.
+
+      - name: hit_and_run_count
+        description: Number of alcohol-involved vehicles in the accident that were hit-and-run.
+
+      - name: rollover_count
+        description: Number of alcohol-involved vehicles in the accident that rolled over.
+
+      - name: towed_count
+        description: Number of alcohol-involved vehicles in the accident that were towed.
+
+      - name: total_occupants
+        description: Total number of occupants in all alcohol-involved vehicles.
+
+      - name: total_vehicle_deaths
+        description: Sum of deaths in all alcohol-involved vehicles.
+
+      - name: sample_vehicle_make
+        description: Example make of an alcohol-involved vehicle in the accident.
+
+      - name: sample_model_year
+        description: Example model year of an alcohol-involved vehicle in the accident.
+
+      - name: max_travel_speed
+        description: Maximum recorded travel speed among alcohol-involved vehicles.
+
+  - name: mrt_alcohol_related_vehicles
+    description:
+      Summary of vehicle and accident metrics where the driver was involved with alcohol.
+      Includes totals and representative values like top make, model year, and body type.
+    columns:
+      - name: alcohol_vehicle_count
+        description: Number of vehicles where the driver had alcohol involved.
+
+      - name: hit_and_run_count
+        description: Total number of vehicles involved in hit-and-run incidents.
+
+      - name: rollover_count
+        description: Total number of rollover incidents.
+
+      - name: towed_count
+        description: Total number of vehicles that were towed.
+
+      - name: total_occupants
+        description: Sum of occupants in all alcohol-involved vehicles.
+
+      - name: total_vehicle_deaths
+        description: Total number of deaths in alcohol-involved vehicles.
+
+      - name: top_vehicle_make
+        description: Most frequently occurring vehicle make among alcohol-involved incidents.
+
+      - name: top_model_year
+        description: Most frequently occurring model year for the top vehicle make.
+
+      - name: top_body_type
+        description: Most frequently occurring body type for the top vehicle make.
+
+      - name: top_travel_speed
+        description: Highest recorded travel speed among vehicles with alcohol-involved drivers.
+
+  - name: mrt_annual_fatality_summary
+    description: Total number of fatalities per year.
+    columns:
+      - name: accident_year
+        description: Year of accidents.
+      - name: total_accidents
+        description: Total number of accidents for year.
+      - name: total_fatalities
+        description: Total number of fatalities for year.
+      - name: total_vehicles
+        description: Total number of vehicles involved in an accident for year.
+      - name: total_fatalities
+        description: Total number of fatalities for year.
+      - name: total_deaths
+        description: Total number of deaths of vehicle occupants for year.
+      - name: alcohol_accidents
+        description: Total number of accidents involving alcohol for year.
+      - name: non_alcohol_accidents
+        description: Total number of accidents not involving alcohol for year.
+      - name: school_bus_accidents
+        description: Total number of school buses invovled in accidents for year.
+
+  - name: mrt_avg_fatalities_by_weather
+    description: Average number of fatalities per accident under each weather condition.
+    columns:
+      - name: weather_condition
+        description: Weather condition.
+      - name: average_fatalities
+        description: Average number of fatalities under this weather condition.
+
+  - name: mrt_body_type_accident_outcomes
+    description: >
+      Summary of accident outcomes grouped by vehicle body type, including
+      rollovers, towing, fatalities, and average travel speed.
+
+    columns:
+      - name: body_type
+        description: Type of vehicle body (e.g., SUV, Sedan, Motorcycle).
+        tests:
+          - not_null
+
+      - name: total_vehicles
+        description: Total number of vehicles for each body type.
+
+      - name: rollover_count
+        description: Number of vehicles that rolled over in each body type group.
+
+      - name: towed_count
+        description: Number of vehicles that were towed.
+
+      - name: total_deaths
+        description: Total number of deaths for that body type.
+
+      - name: avg_travel_speed
+        description: Average speed of vehicles in accidents, in mph.
+
+      - name: pct_rollovers
+        description: Percentage of vehicles of that body type involved in rollovers.
+
+      - name: pct_towed
+        description: Percentage of vehicles of that body type that were towed.
+
+      - name: pct_fatalities
+        description: Percentage of vehicles that resulted in fatalities.
+
+  - name: mrt_top_states
+    description: Top 10 states ranked by total number of fatalities.
+    columns:
+      - name: state
+        description: U.S. state where the accident occurred.
+      - name: total_fatalities
+        description: Total fatalities in that state.
+
+  - name: mrt_top_accident_collision_manners
+    description: Top 10 states ranked by total number of fatalities.
+    columns:
+      - name: collision_manner
+        description: The manner of collision/accident
+      - name: collision_count
+        description: Total collision count.
+
+  - name: mrt_top_vehicle_makes
+    description: Top Vehicle Makes involved in fct_accidents_by_weather
+    columns:
+      - name: vehicle_make
+        description: Make/Manufacturer of vehicle
+      - name: total_vehicles_involved
+        description: Total number of vehicles involved in accident.
+      - name: distinct_accidents
+        description: Number of distinct accidents.
+
+  - name: qa_anomalies_vehicle_deaths
+    description: Identify any inconsistent number of deaths to number of occupants in vehicle
+    columns:
+      - name: vehicle_id
+        description: The unique identifier for each vehicle.
+      - name: accident_id
+        description: The unique identifier for each accident.
+      - name: num_occupants
+        description: Number of occupants recorded for vehicle.
+      - name: deaths
+        description: Number of recorded vehicle occupant deaths.
+      - name: inconsistency_reason
+        description: Reason for death toll to be inconsistent with number of occupants, or not.
