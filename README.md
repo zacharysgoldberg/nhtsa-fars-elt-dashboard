@@ -1,30 +1,72 @@
 # NHTSA FARS ELT Dashboard
 
-## Features & Tools Used
-
-- **Data Extraction & Loading:**
-
-  - PostgreSQL database
-  - Automated ETL pipeline scripts extract and load raw data into the database.
-  - Using Azure Blob Storage for CSV raw and processed data files
-
-- **Data Transformation with dbt:**
-
-  - dbt (data build tool) manages SQL-based transformations, models, and testing on the raw data inside PostgreSQL.
-  - Enables version-controlled, modular, and repeatable data transformation workflows.
-  - dbt models create clean, analysis-ready datasets consumed by the Superset dashboard.
-
-- **Visualization & Exploration:**
-
-  - Apache Superset dashboard for interactive querying, charting, and reporting.
-  - Supports multiple visualizations like bar charts, pie charts, and maps.
-
-- **Containerization & Deployment:**
-  - Superset runs inside a Docker container for easy deployment and scaling.
-  - Hosted on Render.com to provide a scalable, cloud-based analytics service.
+This project delivers a complete ELT (Extract, Load, Transform) pipeline and analytics dashboard for the National Highway Traffic Safety Administration's Fatality Analysis Reporting System (FARS). It streamlines data ingestion, transformation, and visualization to provide meaningful insights into traffic fatality trends across the United States.
 
 ---
 
-## Dashboard Link
+## Project Overview
 
-### https://nhtsa-fars-elt-dashboard.onrender.com
+- Ingests updated FARS data automatically every six months using an Apache Airflow DAG
+- Loads raw datasets into a PostgreSQL data warehouse hosted on Azure
+- Processes and transforms data using Python scripts for standardization and cleaning
+- Models the cleaned data with dbt to power Apache Superset dashboards
+- Presents insights using Superset visualizations and dashboards
+
+---
+
+## ELT Workflow
+
+### 1. **Extract & Load**
+- Data is sourced from NHTSA’s public FARS CSV datasets.
+- An **Apache Airflow** DAG runs every six months to:
+  - Check for new FARS data releases
+  - Download newly available CSVs
+  - Load the raw data into the PostgreSQL warehouse
+
+### 2. **Transform** (Standardize & Clean with Python)
+- Raw CSV files are processed with **Python** to:
+  - Normalize column names and table structures across years
+  - Convert coded fields into human-readable labels
+  - Handle missing values and data type inconsistencies
+  - Ensure relational consistency across tables
+- The cleaned data is written back to PostgreSQL in a separate schema
+
+### 3. **Model** (Using dbt)
+- **dbt** is used to:
+  - Define data models (staging, intermediate, marts)
+  - Create views and tables optimized for analytical queries
+  - Document model lineage and structure for team use
+  - Apply tests for data quality and integrity
+
+### 4. **Visualize**
+- **Apache Superset** connects to the modeled data schema.
+- Dashboards and charts include:
+  - Fatalities by state and time
+  - Vehicle and driver demographics
+  - Trend analysis over multiple years
+
+---
+
+## Tools & Technologies
+
+| Tool            | Role                                                                 |
+|-----------------|----------------------------------------------------------------------|
+| **Apache Airflow** | Orchestrates and schedules the ELT workflow                        |
+| **Python**         | Handles ingestion, cleaning, and transformation of raw CSVs       |
+| **PostgreSQL**     | Stores both raw and processed data                                 |
+| **dbt**            | Builds analysis-ready models and performs data testing             |
+| **Apache Superset**| Hosts interactive dashboards for visualization and exploration     |
+| **Docker**         | Containerizes services and manages isolated environments           |
+
+
+---
+
+## Airflow DAG
+
+- Located in `airflow/dags/`
+- Schedule: **Every 6 months**
+- Tasks:
+  - Check for and download new FARS datasets
+  - Run Python ingestion and transformation scripts
+  - Load cleaned data into PostgreSQL
+  - Trigger dbt models to refresh views/tables
