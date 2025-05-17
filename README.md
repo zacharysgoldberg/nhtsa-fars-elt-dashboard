@@ -59,13 +59,3 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
 
 ---
-
-## Airflow DAG
-
-- Located in `airflow/dags/`
-- Schedule: **Every 6 months**
-- Tasks:
-  - Check for and download new FARS datasets
-  - Run Python ingestion and transformation scripts
-  - Load cleaned data into PostgreSQL
-  - Trigger dbt models to refresh views/tables
