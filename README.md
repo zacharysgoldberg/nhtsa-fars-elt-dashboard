@@ -50,8 +50,9 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 | Tool            | Role                                                                 |
 |-----------------|----------------------------------------------------------------------|
 | **Apache Airflow** | Orchestrates and schedules the ELT workflow                        |
-| **Python**         | Handles ingestion, cleaning, and transformation of raw CSVs       |
-| **PostgreSQL**     | Stores both raw and processed data                                 |
+| **Python**         | Handles ingestion, cleaning, and transformation of raw CSVs        |
+| **Azure Blob**     | Stores raw CSV file data                                           |
+| **PostgreSQL**     | Stores processed data                                              |
 | **dbt**            | Builds analysis-ready models and performs data testing             |
 | **Apache Superset**| Hosts interactive dashboards for visualization and exploration     |
 | **Docker**         | Containerizes services and manages isolated environments           |
