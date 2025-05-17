@@ -35,14 +35,12 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 - **dbt** is used to:
   - Define data models (staging, intermediate, marts)
   - Create views and tables optimized for analytical queries
-  - Document model lineage and structure for team use
   - Apply tests for data quality and integrity
 
 ### 4. **Visualize**
 - **Apache Superset** connects to the modeled data schema.
 - Dashboards and charts include:
-  - Fatalities by state and time
-  - Vehicle and driver demographics
+  - Fatalities by conditions and demographics
   - Trend analysis over multiple years
 
 ---
