@@ -29,7 +29,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
   - Convert coded fields into human-readable labels
   - Handle missing values and data type inconsistencies
   - Ensure relational consistency across tables
-- The cleaned data is written back to PostgreSQL in a separate schema
+- The cleaned data is written to PostgreSQL in a separate schema
 
 ### 3. **Model** (Using dbt)
 - **dbt** is used to:
