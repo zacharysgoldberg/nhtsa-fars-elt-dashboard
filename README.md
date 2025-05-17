@@ -21,7 +21,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 - An **Apache Airflow** DAG runs every six months to:
   - Check for new FARS data releases
   - Download newly available CSVs
-  - Load the raw data into the PostgreSQL warehouse
+  - Loads the raw data into Azure Blob storage.
 
 ### 2. **Transform** (Standardize & Clean with Python)
 - Raw CSV files are processed with **Python** to:
