@@ -5,7 +5,12 @@ superset db upgrade
 
 # Create admin user if it doesn't exist
 # Adjust credentials as needed or read from env variables
-superset fab create-admin --username admin --password admin --firstname Admin --lastname User --email admin@example.com || true
+superset fab create-admin \
+  --username "$SUPERSET_ADMIN_USERNAME" \
+  --password "$SUPERSET_ADMIN_PASSWORD" \
+  --firstname Admin \
+  --lastname User \
+  --email "$SUPERSET_ADMIN_EMAIL" || true
 
 # Initialize Superset
 superset init
