@@ -3,4 +3,4 @@ venv/
 .vscode/
 .env
 elt/data/
-entrypoint.sh
+docker-compose.yml
