@@ -1,27 +1,64 @@
-## Features & Tools Used
+# NHTSA FARS ELT Dashboard
 
-- **Data Extraction & Loading:**
+This project delivers a complete ELT (Extract, Load, Transform) pipeline and analytics dashboard for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS). It streamlines data ingestion, transformation, and visualization to provide meaningful insights into traffic fatality trends across the United States.
 
-  - PostgreSQL database hosted on an Azure VM running in Docker for storing raw and processed FARS data.
-  - Automated ETL pipeline scripts extract and load raw data into the database.
+---
 
-- **Data Transformation with dbt:**
+## Project Overview
 
-  - dbt (data build tool) manages SQL-based transformations, models, and testing on the raw data inside PostgreSQL.
-  - Enables version-controlled, modular, and repeatable data transformation workflows.
-  - dbt models create clean, analysis-ready datasets consumed by the Superset dashboard.
+- Ingests updated FARS data automatically every six months using an Apache Airflow DAG
+- Loads raw datasets into a PostgreSQL data warehouse hosted on Azure
+- Processes and transforms data using Python scripts and dbt for standardization, cleaning, and modeling
+- Presents insights using Apache Superset dashboards
 
-- **Visualization & Exploration:**
+---
 
-  - Apache Superset dashboard for interactive querying, charting, and reporting.
-  - Supports multiple visualizations like bar charts, pie charts, and maps.
+## ELT Workflow
 
-- **Containerization & Deployment:**
-  - Superset runs inside a Docker container for easy deployment and scaling.
-  - Hosted on Render.com to provide a scalable, cloud-based analytics service.
+### 1. **Extract & Load**
+
+- Data is sourced from NHTSA’s public FARS CSV datasets.
+- An **Apache Airflow** DAG runs every six months to:
+  - Check for new FARS data releases
+  - Download newly available CSVs
+  - Load the raw data into Azure Blob storage
+
+### 2. **Transform**
+
+- **Python scripts** perform initial processing to:
+
+  - Standardize column names and table structures across years
+  - Clean data by handling missing values, fixing data types, and decoding coded fields
+  - Write cleaned data back to PostgreSQL
+
+- **dbt** performs further transformations inside PostgreSQL to:
+  - Define staging, intermediate, and data mart models
+  - Create optimized tables and views for analytics
+  - Apply data quality and integrity tests
+
+### 3. **Visualization**
+
+- **Apache Superset** connects to the modeled data schema
+- Dashboards include:
+  - Fatalities by conditions and demographics
+  - Trend analysis over multiple years
+
+---
+
+## Tools & Technologies
+
+| Tool                | Role                                                                |
+| ------------------- | ------------------------------------------------------------------- |
+| **Apache Airflow**  | Orchestrates and schedules the ELT workflow                         |
+| **Python**          | Handles ingestion, cleaning, and initial transformation of raw CSVs |
+| **Azure Blob**      | Stores raw CSV file data                                            |
+| **PostgreSQL**      | Stores processed and transformed data                               |
+| **dbt**             | Builds analysis-ready models and performs data testing              |
+| **Apache Superset** | Hosts interactive dashboards for visualization and exploration      |
+| **Docker**          | Containerizes services and manages isolated environments            |
 
 ---
 
 ## Dashboard Link
 
-### https://nhtsa-fars-elt-dashboard.onrender.com
+(Link)

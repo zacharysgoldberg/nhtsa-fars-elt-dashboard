@@ -1,60 +1,76 @@
-# main.py
 from datetime import datetime
-import pandas as pd
+
+import psycopg2
 from db.init_db import init_db
 from ingest.get_fars_data import download_and_extract_fars_data, load_data
 from process.clean_fars_data import clean_accident_data, clean_vehicle_data
 from process.transform_fars_data import standardize_fars_accident_data, standardize_fars_vehicle_data
 from storage.save_data import save_to_db
-from util.helpers import summarize_accident_data, summarize_vehicle_data, should_download_year, get_latest_downloaded_year
+from util.helpers import should_download_year, get_latest_downloaded_year
+from azure.storage.blob import BlobServiceClient
+from config.config import AZURE_STORAGE_CONNECTION_STRING, DB_CONFIG
 
 
 def main():
-    # --- Download raw data ---
+    ''' Extract and Load '''
+
+    # --- Download (Extract and Load) raw data into Blob Storage ---
     current_year = datetime.now().year
     target_year = current_year - 1  # FARS data is typically published the year after
 
-    if should_download_year(target_year):
-        result = download_and_extract_fars_data(target_year)
+    blob_service_client = BlobServiceClient.from_connection_string(
+        AZURE_STORAGE_CONNECTION_STRING)
+
+    # years = range(2016, target_year)
+    # for year in years:
+    #     result = download_and_extract_fars_data(year, blob_service_client)
+    #     print(f"{year} files: {result}")
+
+    if should_download_year(target_year, blob_service_client):
+        result = download_and_extract_fars_data(
+            target_year, blob_service_client)
     else:
         print(f"\nYear {target_year} already downloaded. Skipping download.\n")
         print("Result: ", result)
 
-    # years = range(2016, current_year)
-    # for year in years:
-    #     result = download_and_extract_fars_data(year)
-    #     print(f"{year} files: {result}")
-
+    ''' Transform '''
     # --- Standardize raw data ---
-    standardize_fars_accident_data()
-    standardize_fars_vehicle_data()
+    standardized_accident_df = standardize_fars_accident_data(
+        blob_service_client)
+    standardized_vehicle_df = standardize_fars_vehicle_data(
+        blob_service_client)
 
-    # --- Load standardized data ---
-    standardized_accident_file_path = 'data/processed/fars_data/standardized/standardized_accident_data.csv'
-    standardized_vehicle_file_path = 'data/processed/fars_data/standardized/standardized_vehicle_data.csv'
+    standardized_accident_file_path = 'standardized/standardized_accident.csv'
+    standardized_vehicle_file_path = 'standardized/standardized_vehicle.csv'
 
-    standardized_accident_df = load_data(standardized_accident_file_path)
-    standardized_vehicle_df = load_data(standardized_vehicle_file_path)
+    # standardized_accident_df = load_data(
+    #     standardized_accident_file_path, blob_service_client)
+    # standardized_vehicle_df = load_data(
+    #     standardized_vehicle_file_path, blob_service_client)
 
-    # # --- Clean standardized data ---
-    clean_accident_data(standardized_accident_df)
-    clean_vehicle_data(standardized_vehicle_df)
+    # --- Clean standardized data ---
+    cleaned_accident_df = clean_accident_data(
+        standardized_accident_df, blob_service_client)
+    cleaned_vehicle_df = clean_vehicle_data(
+        standardized_vehicle_df, blob_service_client)
 
-    cleaned_accident_file_path = 'data/processed/fars_data/cleaned/cleaned_accident_data.csv'
-    cleaned_vehicle_file_path = 'data/processed/fars_data/cleaned/cleaned_vehicle_data.csv'
+    cleaned_accident_file_path = 'cleaned/cleaned_accident.csv'
+    cleaned_vehicle_file_path = 'cleaned/cleaned_vehicle.csv'
 
-    # --- Initialize Database ---
-    cleaned_accident_df = load_data(cleaned_accident_file_path)
-    cleaned_vehicle_df = load_data(cleaned_vehicle_file_path)
-
-    # summarize_accident_data(cleaned_accident_df)
-    # summarize_vehicle_data(cleaned_vehicle_df)
-
-    init_db(cleaned_accident_df, cleaned_vehicle_df)
+    # cleaned_accident_df = load_data(
+    #     cleaned_accident_file_path, blob_service_client)
+    # cleaned_vehicle_df = load_data(
+    #     cleaned_vehicle_file_path, blob_service_client)
 
     # --- Save to database ---
-    save_to_db(cleaned_accident_df, table='accident')
-    save_to_db(cleaned_vehicle_df, table='vehicle')
+    conn = psycopg2.connect(**DB_CONFIG)
+
+    init_db(cleaned_accident_df, cleaned_vehicle_df, conn)
+
+    save_to_db(cleaned_accident_df, 'accident', conn)
+    save_to_db(cleaned_vehicle_df, 'vehicle', conn)
+
+    conn.close()
 
 
 if __name__ == "__main__":

@@ -1,63 +1,65 @@
-import pandas as pd
+from io import BytesIO, StringIO
+from typing import Union
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
+from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import ContentSettings
 
 
-def should_download_year(year: int, base_dir: str = "data/raw/fars_data") -> bool:
-    year_folder = Path(base_dir) / str(year)
-    return not year_folder.exists()
-
-
-def get_latest_downloaded_year(base_dir: str = "data/raw/fars_data") -> Optional[int]:
-    path = Path(base_dir)
-    years = [int(p.name)
-             for p in path.iterdir() if p.is_dir() and p.name.isdigit()]
-    return max(years) if years else None
-
-
-def summarize_accident_data(df: pd.DataFrame):
+def should_download_year(year: int, blob_service_client) -> bool:
     """
-    Print quick summary statistics and missing value counts for the standardized data.
+    Check if blobs exist under the 'folder' (prefix) for the given year in Azure Blob Storage.
+    Returns True if no blobs exist under that prefix (i.e., data should be downloaded).
     """
-    print("\n--- Column Summary ---")
-    print(df.dtypes)
-    print("\n--- Missing Values ---")
-    print(df.isna().sum().sort_values(ascending=False).head(20))
 
-    # Display the top 10 manufacturers if applicable (adjust based on your dataset)
-    if 'county' in df.columns:
-        print("\n--- Top Counties ---")
-        print(df['county'].value_counts().head(10))
+    prefix = f"raw-data/{year}/"
+    container_client = blob_service_client.get_container_client('raw-data')
+    blobs_list = list(container_client.list_blobs(name_starts_with=prefix))
 
-    # Display the top 10 states if applicable (adjust based on your dataset)
-    if 'state' in df.columns:
-        print("\n--- Top States ---")
-        print(df['state'].value_counts().head(10))
-
-    # Display a few basic statistics
-    print(f"\n--- Accident Summary Statistics ---")
-    print(df.describe(include='all').transpose().head(10))
+    return len(blobs_list) == 0
 
 
-def summarize_vehicle_data(df: pd.DataFrame):
+def get_latest_downloaded_year(blob_service_client, base_path: str = "raw-data/") -> Optional[int]:
     """
-    Print quick summary statistics and missing value counts for the standardized data.
+    Find the latest year folder present in the blob container under base_path.
     """
-    print("\n--- Column Summary ---")
-    print(df.dtypes)
-    print("\n--- Missing Values ---")
-    print(df.isna().sum().sort_values(ascending=False).head(20))
 
-    # Display the top 10 manufacturers if applicable (adjust based on your dataset)
-    if 'make' in df.columns:
-        print("\n--- Top Vehicle Makes ---")
-        print(df['make'].value_counts().head(10))
+    blob_prefixes = set()
+    container_client = blob_service_client.get_container_client('raw-data')
+    blobs = container_client.list_blobs(name_starts_with=base_path)
 
-    # Display the top 10 states if applicable (adjust based on your dataset)
-    if 'state' in df.columns:
-        print("\n--- Top States ---")
-        print(df['state'].value_counts().head(10))
+    for blob in blobs:
+        # Blob name looks like raw-data/2023/filename.csv
+        # Extract the folder part after base_path
+        relative_path = blob.name[len(base_path):]
+        parts = relative_path.split('/')
+        if parts and parts[0].isdigit():
+            blob_prefixes.add(int(parts[0]))
 
-    # Display a few basic statistics
-    print(f"\n--- Vehicle Summary Statistics ---")
-    print(df.describe(include='all').transpose().head(10))
+    return max(blob_prefixes) if blob_prefixes else None
+
+
+def upload_to_blob(
+    data: Union[Path, str, BytesIO, StringIO],
+    blob_path: str,
+    blob_service_client: BlobServiceClient,
+    container_name: str,
+    content_type: str = "text/csv"
+):
+    container_client = blob_service_client.get_container_client(container_name)
+    blob_client = container_client.get_blob_client(blob_path)
+
+    if isinstance(data, (Path, str)):
+        # Assume local file path
+        with open(data, "rb") as f:
+            blob_client.upload_blob(
+                f, overwrite=True, content_settings=ContentSettings(content_type=content_type)
+            )
+    else:
+        # Assume in-memory buffer (StringIO or BytesIO)
+        data.seek(0)
+        blob_client.upload_blob(
+            data.read(), overwrite=True, content_settings=ContentSettings(content_type=content_type)
+        )
+
+    print(f"Uploaded to blob: {blob_path}")

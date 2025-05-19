@@ -1,9 +1,9 @@
 import pandas as pd
 import psycopg2
-from config.config import DB_CONFIG
+from psycopg2.extensions import connection
 
 
-def map_dtype_to_postgres(dtype):
+def map_dtype_to_postgres(dtype) -> str:
     if pd.api.types.is_integer_dtype(dtype):
         return "INTEGER"
     elif pd.api.types.is_float_dtype(dtype):
@@ -14,7 +14,7 @@ def map_dtype_to_postgres(dtype):
         return "TEXT"
 
 
-def build_create_table_sql(table_name, df, extra_fields=None, foreign_keys=None, unique_constraint=None):
+def build_create_table_sql(table_name: str, df: pd.DataFrame, extra_fields=None, foreign_keys=None, unique_constraint=None):
     fields = []
     if extra_fields:
         fields.extend(extra_fields)
@@ -38,8 +38,7 @@ def build_create_table_sql(table_name, df, extra_fields=None, foreign_keys=None,
     '''
 
 
-def init_db(accident_df, vehicle_df):
-    conn = psycopg2.connect(**DB_CONFIG)
+def init_db(accident_df: pd.DataFrame, vehicle_df: pd.DataFrame, conn: connection):
     cursor = conn.cursor()
 
     # Define foreign key and unique constraints
@@ -83,5 +82,4 @@ def init_db(accident_df, vehicle_df):
         'CREATE INDEX IF NOT EXISTS idx_vehicle_year ON vehicle(year);')
 
     conn.commit()
-    conn.close()
     print("PostgreSQL tables created with uniqueness constraints using dynamic schema.")
