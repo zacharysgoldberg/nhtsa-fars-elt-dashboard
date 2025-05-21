@@ -1,5 +1,4 @@
 from datetime import datetime
-
 import psycopg2
 from db.init_db import init_db
 from ingest.get_fars_data import download_and_extract_fars_data, load_data

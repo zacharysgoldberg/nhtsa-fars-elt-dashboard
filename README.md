@@ -29,7 +29,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
   - Standardize column names and table structures across years
   - Clean data by handling missing values, fixing data types, and decoding coded fields
-  - Write cleaned data back to PostgreSQL
+  - Write cleaned data to PostgreSQL
 
 - **dbt** performs further transformations inside PostgreSQL to:
   - Define staging, intermediate, and data mart models
