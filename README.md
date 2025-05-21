@@ -10,7 +10,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 - Loads raw datasets into a PostgreSQL data warehouse hosted on Azure
 - Processes and transforms data using Python scripts and dbt for standardization, cleaning, and modeling
 - Presents insights using Apache Superset dashboards
-- Automatically runs pipeline and updates dashboard every six months using an Apache Airflow DAG
+- Automatically runs pipeline, including dbt models, and updates dashboard every six months using an Apache Airflow DAG
 
 ---
 
@@ -23,14 +23,16 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
   - Check for new FARS data releases
   - Download newly available CSVs
   - Load the raw data into Azure Blob storage
+  - Transform raw data using Python scripts
+  - Finally, makes data dashboard ready by running dbt model transformations
 
 ### 2. **Transform**
 
 - **Python scripts** perform initial processing to:
 
-  - Standardize column names and table structures across years
-  - Clean data by handling missing values, fixing data types, and decoding coded fields
-  - Write cleaned data to PostgreSQL
+  - Standardizes column names and table structures across years
+  - Cleans data by handling missing values, fixing data types, and decoding coded fields
+  - Writes cleaned data to Azure Blob as combined CSV files, and PostgreSQL for analysis
 
 - **dbt** performs further transformations inside PostgreSQL to:
   - Define staging, intermediate, and data mart models
