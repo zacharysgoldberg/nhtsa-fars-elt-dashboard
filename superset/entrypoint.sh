@@ -15,5 +15,13 @@ superset fab create-admin \
 # Initialize Superset
 superset init
 
-# Run Superset server listening on all interfaces
-exec superset run -h 0.0.0.0 -p 8088 --with-threads --reload --debugger
+# Run Superset server listening on all interfaces - development server
+# exec superset run -h 0.0.0.0 -p 8088 --with-threads --reload --debugger
+
+# Run Superset server (production mode with Gunicorn)
+exec gunicorn \
+    -w 4 \
+    -k gevent \
+    --timeout 120 \
+    -b 0.0.0.0:8088 \
+    "superset.app:create_app()"

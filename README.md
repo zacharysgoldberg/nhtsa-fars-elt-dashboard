@@ -6,10 +6,11 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
 ## Project Overview
 
-- Ingests updated FARS data automatically every six months using an Apache Airflow DAG
+- Ingests updated FARS data
 - Loads raw datasets into a PostgreSQL data warehouse hosted on Azure
 - Processes and transforms data using Python scripts and dbt for standardization, cleaning, and modeling
 - Presents insights using Apache Superset dashboards
+- Automatically runs pipeline and updates dashboard every six months using an Apache Airflow DAG
 
 ---
 
