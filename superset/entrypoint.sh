@@ -20,7 +20,7 @@ superset init
 
 # Run Superset server (production mode with Gunicorn)
 exec gunicorn \
-    -w 4 \
+    -w 2 \
     -k gevent \
     --timeout 120 \
     -b 0.0.0.0:8088 \
