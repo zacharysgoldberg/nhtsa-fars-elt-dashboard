@@ -1,16 +1,16 @@
 -- models/intermediate/int_accidents_with_fire_summary.sql
 {{ config(materialized = 'view') }}
 
-WITH fire_vehicles AS (
-    SELECT
+with fire_vehicles as (
+    select
         accident_id,
-        COUNT(*) AS vehicles_with_fire
-    FROM {{ ref('stg_vehicle') }}
-    WHERE fire_or_explosion = True
-    GROUP BY accident_id
+        count(*) as vehicles_with_fire
+    from {{ ref('stg_vehicle') }}
+    where fire_or_explosion = True
+    group by accident_id
 )
 
-SELECT
+select
     a.accident_id,
     a.st_case,
     a.accident_year,
@@ -20,6 +20,6 @@ SELECT
     a.light_condition,
     a.fatalities,
     fv.vehicles_with_fire
-FROM {{ ref('stg_accident') }} a
-INNER JOIN fire_vehicles fv
-    ON a.accident_id = fv.accident_id
+from {{ ref('stg_accident') }} a
+inner join fire_vehicles fv
+    on a.accident_id = fv.accident_id

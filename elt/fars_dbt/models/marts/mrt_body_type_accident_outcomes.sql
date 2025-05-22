@@ -1,26 +1,26 @@
 -- models/marts/mrt_body_type_accident_outcomes.sql
 {{ config(materialized='view') }}
 
-WITH vehicle_data AS (
-    SELECT *
-    FROM {{ ref('int_accident_vehicle_joined') }}
-    WHERE body_typ IS NOT NULL AND body_typ NOT LIKE '%Unknown%'
+with vehicle_data as (
+    select *
+    from {{ ref('int_accident_vehicle_joined') }}
+    where body_typ is not null and body_typ not like '%Unknown%'
 ),
 
 body_type_summary AS (
     SELECT
         body_typ,
-        COUNT(*) AS total_vehicles,
-        SUM(CASE WHEN rolled_over THEN 1 ELSE 0 END) AS rollover_count,
-        SUM(CASE WHEN towed THEN 1 ELSE 0 END) AS towed_count,
-        SUM(deaths) AS total_deaths,
-        ROUND(AVG(travel_spd_mph), 2) AS avg_travel_speed
-    FROM vehicle_data
-    GROUP BY body_typ
+        count(*) AS total_vehicles,
+        sum(case when rolled_over then 1 else 0 end) as rollover_count,
+        sum(case when towed then 1 else 0 end) as towed_count,
+        sum(deaths) as total_deaths,
+        round(avg(travel_spd_mph), 2) as avg_travel_speed
+    from vehicle_data
+    group by body_typ
 ),
 
-percentages AS (
-    SELECT
+percentages as (
+    select
         body_typ,
         total_vehicles,
         rollover_count,
@@ -28,11 +28,11 @@ percentages AS (
         total_deaths,
         avg_travel_speed,
 
-        ROUND(100.0 * rollover_count / total_vehicles, 2) AS pct_rollovers,
-        ROUND(100.0 * towed_count / total_vehicles, 2) AS pct_towed,
-        ROUND(100.0 * total_deaths / NULLIF(total_vehicles, 0), 2) AS pct_fatalities
-    FROM body_type_summary
+        round(100.0 * rollover_count / total_vehicles, 2) as pct_rollovers,
+        round(100.0 * towed_count / total_vehicles, 2) as pct_towed,
+        round(100.0 * total_deaths / nullif(total_vehicles, 0), 2) as pct_fatalities
+    from body_type_summary
 )
 
-SELECT * FROM percentages
-ORDER BY total_vehicles DESC
+select * from percentages
+order by total_vehicles desc

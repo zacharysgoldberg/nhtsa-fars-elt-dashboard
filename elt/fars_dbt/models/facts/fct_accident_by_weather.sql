@@ -1,13 +1,13 @@
 -- models/facts/fct_fatal_accident_by_weather.sql
 {{ config(materialized='view') }}
 
-SELECT
+select
     weather_condition,
-    COUNT(*) AS total_accidents,
-    SUM(fatalities) AS total_fatalities,
-    AVG(fatalities) AS avg_fatalities
-FROM {{ ref('stg_accident') }}
-WHERE weather_condition IS NOT NULL
-AND weather_condition NOT IN ('Unknown', 'Not Reported', 'NOT APPLICABLE')
-GROUP BY weather_condition
-ORDER BY total_accidents desc
+    count(*) AS total_accidents,
+    sum(fatalities) AS total_fatalities,
+    avg(fatalities) AS avg_fatalities
+from {{ ref('stg_accident') }}
+where weather_condition is not null
+and weather_condition not in ('Unknown', 'Not Reported', 'NOT APPLICABLE')
+group by weather_condition
+order by total_accidents desc

@@ -1,6 +1,6 @@
 # NHTSA FARS ELT Dashboard
 
-This project delivers a complete ELT (Extract, Load, Transform) pipeline and analytics dashboard for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS). It streamlines data ingestion, transformation, and visualization to provide meaningful insights into traffic fatality trends across the United States.
+This project delivers a complete ELT (Extract, Load, Transform) pipeline and analytics dashboard for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS) data. It streamlines data ingestion, transformation, and visualization to provide meaningful insights into traffic fatality trends across the United States.
 
 ---
 
@@ -50,15 +50,15 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
 ## Tools & Technologies
 
-| Tool                | Role                                                                |
-| ------------------- | ------------------------------------------------------------------- |
-| **Apache Airflow**  | Orchestrates and schedules the ELT workflow                         |
-| **Python**          | Handles ingestion, cleaning, and initial transformation of raw CSVs |
-| **Azure Blob**      | Stores raw CSV file data                                            |
-| **PostgreSQL**      | Stores processed and transformed data                               |
-| **dbt**             | Builds analysis-ready models and performs data testing              |
-| **Apache Superset** | Hosts interactive dashboards for visualization and exploration      |
-| **Docker**          | Containerizes services and manages isolated environments            |
+| Tool                | Role                                                                                    |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| **Apache Airflow**  | Orchestrates and schedules the ELT workflow                                             |
+| **Python**          | Handles ingestion, cleaning, and initial transformation of raw CSVs                     |
+| **Azure Blob**      | Stores raw CSV file data                                                                |
+| **PostgreSQL**      | Stores processed and transformed data                                                   |
+| **dbt**             | Builds analysis-ready models and performs data testing                                  |
+| **Apache Superset** | Hosts interactive dashboards for visualization and exploration                          |
+| **Docker**          | Containerizes Superset, Airflow, and Postgres databases for both FARS and Superset data |
 
 ---
 

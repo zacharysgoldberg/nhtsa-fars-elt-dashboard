@@ -1,16 +1,16 @@
 -- models/quality/qa_anomalies_vehicle_deaths.sql
 {{ config(materialized='view') }}
 
-SELECT vehicle_id,
+select vehicle_id,
     accident_id,
     num_of_occupants,
     deaths,
-    CASE
-        WHEN deaths > num_of_occupants THEN 'Too many fatalities'
-        WHEN deaths < 0 OR num_of_occupants < 0 THEN 'Negative values'
-        ELSE 'Valid'
-    END AS inconsistency_reason
-FROM {{ ref('stg_vehicle') }}
-WHERE
+    case
+        when deaths > num_of_occupants then 'Too many fatalities'
+        when deaths < 0 or num_of_occupants < 0 then 'Negative values'
+        else 'Valid'
+    end as inconsistency_reason
+from {{ ref('stg_vehicle') }}
+where
     deaths > num_of_occupants
-    OR deaths < 0
+    or deaths < 0

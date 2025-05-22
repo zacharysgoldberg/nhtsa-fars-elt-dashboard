@@ -1,23 +1,23 @@
 -- models/marts/mrt_alcohol_related_vehicles.sql
 {{ config(materialized = 'view') }}
 
-WITH alcohol_vehicles AS (
-    SELECT *
-    FROM {{ ref('int_accident_vehicle_joined') }}
-    WHERE driver_had_alcohol = TRUE
+with alcohol_vehicles as (
+    select *
+    from {{ ref('int_accident_vehicle_joined') }}
+    where driver_had_alcohol = TRUE
 ),
 
 vehicle_stats as (
-    SELECT
-        COUNT(*) AS alcohol_vehicle_count,
-        SUM(CASE WHEN hit_and_run THEN 1 ELSE 0 END) AS hit_and_run_count,
-        SUM(CASE WHEN rolled_over THEN 1 ELSE 0 END) AS rollover_count,
-        SUM(CASE WHEN towed THEN 1 ELSE 0 END) AS towed_count,
-        SUM(num_of_occupants) AS total_occupants,
-        SUM(deaths) AS total_vehicle_deaths,
-        ROUND(AVG(model_year), 0) AS avg_model_year,
-        ROUND(AVG(travel_spd_mph), 1) AS avg_travel_speed
-    FROM alcohol_vehicles
+    select
+        count(*) as alcohol_vehicle_count,
+        sum(case when hit_and_run then 1 else 0 end) as hit_and_run_count,
+        sum(case when rolled_over then 1 else 0 end) as rollover_count,
+        sum(case when towed then 1 else 0 end) as towed_count,
+        sum(num_of_occupants) as total_occupants,
+        sum(deaths) as total_vehicle_deaths,
+        round(avg(model_year), 0) as avg_model_year,
+        round(avg(travel_spd_mph), 1) as avg_travel_speed
+    from alcohol_vehicles
 ),
 
 make_ranked as (
@@ -43,21 +43,21 @@ top_make as (
 ),
 
 top_model_for_top_make AS (
-    SELECT model AS most_common_model
-    FROM alcohol_vehicles
-    WHERE make = (SELECT most_common_make FROM top_make)
-    GROUP BY model
-    ORDER BY COUNT(*) DESC
-    LIMIT 1
+    select model AS most_common_model
+    from alcohol_vehicles
+    where make = (select most_common_make from top_make)
+    group by model
+    order by count(*) desc
+    limit 1
 ),
 
 top_body_type_of_top_model as (
     select body_typ as most_common_body_type
     from alcohol_vehicles
-    WHERE model = (SELECT most_common_model FROM top_model_for_top_make)
-    GROUP BY body_typ
-    ORDER BY COUNT(*) DESC
-    LIMIT 1
+    where model = (select most_common_model from top_model_for_top_make)
+    group by body_typ
+    order by count(*) desc
+    limit 1
 )
 
 select vs.*,

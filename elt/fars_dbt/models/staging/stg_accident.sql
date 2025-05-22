@@ -1,45 +1,45 @@
 -- models/staging/stg_accident.sql
 {{ config(materialized = 'view') }}
 
-SELECT
+select
     id AS accident_id,  -- keep as-is, primary key
     st_case,
     state,
     county,
     city,
-    CAST(year AS INTEGER) AS accident_year,
-    CAST(month AS INTEGER) AS month,
-    CAST(day AS INTEGER) AS day,
-    day_week AS day_of_week,
-    CAST(hour AS INTEGER) AS hour,
-    CAST(minute AS INTEGER) AS minute,
-    CAST(latitude AS FLOAT) AS lat,
-    CAST(longitud AS FLOAT) AS lon,
+    cast(year as integer) as accident_year,
+    cast(month as integer) as month,
+    cast(day as integer) as day,
+    day_week as day_of_week,
+    cast(hour as integer) as hour,
+    cast(minute as integer) as minute,
+    cast(latitude as float) as lat,
+    cast(longitud as float) as lon,
     rur_urb,
     func_sys,
     rd_owner,
-    CAST(milept AS INTEGER) AS milept,
+    cast(milept as integer) as milept,
     nhs,
     sp_jur,
     harm_ev,
-    man_coll AS collision_manner,
+    man_coll as collision_manner,
 
-    CASE 
-        WHEN reljct1 ILIKE 'yes' THEN TRUE
-        ELSE FALSE
-    END AS at_junction,
+    case 
+        when reljct1 ilike 'yes' then TRUE
+        else FALSE
+    end as at_junction,
 
-    typ_int AS intersection_type,
-    rel_road AS road_relation,
-    lgt_cond AS light_condition,
-    weather AS weather_condition,
+    typ_int as intersection_type,
+    rel_road as road_relation,
+    lgt_cond as light_condition,
+    weather as weather_condition,
 
-    CASE 
-        WHEN sch_bus ILIKE 'yes' THEN TRUE
-        ELSE FALSE
-    END AS school_bus_involved,
+    case 
+        when sch_bus ilike 'yes' then TRUE
+        else FALSE
+    end as school_bus_involved,
 
-    CAST(drunk_dr AS INTEGER) AS drunk_drivers,
-    fatals AS fatalities
-FROM public.accident
+    cast(drunk_dr as integer) as drunk_drivers,
+    fatals as fatalities
+from public.accident
 

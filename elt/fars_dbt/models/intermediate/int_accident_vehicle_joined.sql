@@ -1,7 +1,7 @@
 -- models/intermediate/int_accident_vehicle_joined.sql
 {{ config(materialized = 'view') }}
 
-SELECT
+select
     a.*,
     v.vehicle_id,
     v.num_of_occupants,
@@ -15,6 +15,6 @@ SELECT
     v.towed,
     v.deaths,
     v.driver_had_alcohol
-FROM {{ ref('stg_accident') }} a
-LEFT JOIN {{ ref('stg_vehicle') }} v
-    ON a.accident_id = v.accident_id
+from {{ ref('stg_accident') }} a
+left join {{ ref('stg_vehicle') }} v
+    on a.accident_id = v.accident_id

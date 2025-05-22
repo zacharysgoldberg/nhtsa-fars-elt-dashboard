@@ -1,9 +1,9 @@
 -- models/marts/accidents/mrt_avg_fatalities_by_weather.sql
 {{ config(materialized = 'table') }}
 
-SELECT
+select
     weather_condition,
-    ROUND(AVG(fatalities), 2) AS avg_fatalities
-FROM {{ ref('stg_accident') }}
-GROUP BY weather_condition
-ORDER BY avg_fatalities DESC
+    round(avg(fatalities), 2) as avg_fatalities
+from {{ ref('stg_accident') }}
+group by weather_condition
+order by avg_fatalities desc

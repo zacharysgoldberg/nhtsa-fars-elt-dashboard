@@ -1,65 +1,65 @@
 -- models/staging/stg_vehicle.sql
 {{ config(materialized = 'view') }}
 
-SELECT
-    id AS vehicle_id,
+select
+    id as vehicle_id,
     accident_id,
     st_case,
-    CAST(numoccs AS INTEGER) AS num_of_occupants,
-    CAST(year AS INTEGER) AS year,
-    CAST(month AS INTEGER) AS month,
-    CAST(day AS INTEGER) AS day,
-    CAST(hour AS INTEGER) AS hour,
-    CAST(minute AS INTEGER) AS minute,
+    cast(numoccs as integer) as num_of_occupants,
+    cast(year as integer) as year,
+    cast(month as integer) as month,
+    cast(day as integer) as day,
+    cast(hour as integer) as hour,
+    cast(minute as integer) as minute,
     state,
     harm_ev,
-    man_coll AS collision_manner,
+    man_coll as collision_manner,
     unittype,
 
-    CASE 
-        WHEN hit_run ILIKE 'yes' THEN TRUE
-        ELSE FALSE
-    END AS hit_and_run,
+    case 
+        when hit_run ilike 'yes' then TRUE
+        else FALSE
+    end as hit_and_run,
 
     owner,
     make,
     model,
-    CAST(mod_year AS INTEGER) AS model_year,
+    cast(mod_year as integer) as model_year,
     body_typ,
     vin,
-    CAST(j_knife AS BOOLEAN) AS jackknifed,
-    CAST(tow_veh AS BOOLEAN) AS towed,
+    cast(j_knife as BOOLEAN) as jackknifed,
+    cast(tow_veh as BOOLEAN) as towed,
 
-    CASE 
-        WHEN haz_inv ILIKE 'yes' THEN TRUE
-        ELSE FALSE
-    END AS hazmat_involved,
+    case 
+        when haz_inv ilike 'yes' then TRUE
+        else FALSE
+    end as hazmat_involved,
 
     bus_use,
-    spec_use AS special_use,
-    CAST(trav_sp AS INTEGER) AS travel_spd_mph,
+    spec_use as special_use,
+    cast(trav_sp as integer) as travel_spd_mph,
 
-    CASE 
-        WHEN rollover ILIKE 'Rollover, Tripped by Object/Vehicle' THEN TRUE
-        ELSE FALSE
-    END AS rolled_over,
+    case 
+        when rollover ilike 'Rollover, Tripped by Object/Vehicle' then TRUE
+        else FALSE
+    end as rolled_over,
 
-    rolinloc AS rollover_location,
-    impact1 AS initial_impact,
+    rolinloc as rollover_location,
+    impact1 as initial_impact,
     deformed,
-    m_harm AS main_harmful_event,
+    m_harm as main_harmful_event,
 
-    CASE 
-        WHEN fire_exp ILIKE 'yes' THEN TRUE
-        ELSE FALSE
-    END AS fire_or_explosion,
+    case 
+        when fire_exp ilike 'yes' then TRUE
+        else FALSE
+    end as fire_or_explosion,
 
-    CAST(deaths AS INTEGER) AS deaths,
+    cast(deaths as integer) as deaths,
 
-    CASE 
-        WHEN dr_drink ILIKE 'yes' THEN TRUE
-        ELSE FALSE
-    END AS driver_had_alcohol
+    case 
+        when dr_drink ilike 'yes' then TRUE
+        else FALSE
+    end as driver_had_alcohol
 
-FROM public.vehicle
+from public.vehicle
 
