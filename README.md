@@ -64,4 +64,8 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
 ## Dashboard Link
 
-(Link)
+- To view the Dashboard and metrics, log into Superset using public facing credentials:
+  - username: User
+  - password: password
+  - [https://nhtsa-fars-elt-dashboard.onrender.com/superset/dashboard/p/QaKezOZEDkd/](Superset Dashboard)
+  - **###Note:** Please give Render a minute to spin up Apache Superset to view the dashboard
