@@ -41,7 +41,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
 ### 3. **Visualization**
 
-- **Apache Superset** connects to the modeled data schema
+- **Apache Superset** connects to the modeled database schema
 - Dashboards include:
   - Fatalities by conditions and demographics
   - Summary of accident event details per vehicles involved
