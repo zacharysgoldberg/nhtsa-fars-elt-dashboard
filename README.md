@@ -69,4 +69,4 @@ To view the dashboard and metrics, **sign in using the public credentials below*
 - **Username:** `User`
 - **Password:** `password`
 
-> ⚠️ **Note:** It may take a minute for Render to spin up Apache Superset. Please be patient!
+> ⚠️ **Note:** It may take several minutes for Render to spin up Apache Superset. Please be patient!
