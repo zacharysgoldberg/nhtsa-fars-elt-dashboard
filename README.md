@@ -59,7 +59,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 | **PostgreSQL**      | Stores processed and transformed data                                                   |
 | **dbt**             | Builds analysis-ready models and performs data testing                                  |
 | **Apache Superset** | Hosts interactive dashboards for visualization and exploration                          |
-| **Docker**          | Containerizes Superset, Airflow, and Postgres databases for both FARS and Superset data |
+| **Docker**          | Containerizes Superset, Airflow, and Postgres databases for both FARS data and Superset metadata |
 
 ---
 
