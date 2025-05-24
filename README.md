@@ -24,7 +24,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
   - Download newly available CSVs
   - Load the raw data into Azure Blob storage
   - Transform raw data using Python scripts
-  - Finally, makes data dashboard ready by running dbt model transformations
+  - Finally, updates dashboard by running dbt model transformations
 
 ### 2. **Transform**
 
