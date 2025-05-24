@@ -8,7 +8,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
 - Ingests updated FARS data
 - Loads raw datasets into a blob storage hosted on Azure
-- Processes and transforms data using Python scripts and dbt for standardization, cleaning, and modeling
+- Processes and transforms data using Python scripts for standardization, cleaning, and dbt for modeling
 - Presents insights using Apache Superset dashboards
 - Automatically runs pipeline, including dbt models, and updates dashboard every six months using an Apache Airflow DAG
 
