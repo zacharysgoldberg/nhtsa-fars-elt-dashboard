@@ -2,7 +2,7 @@ name: Scheduled ELT pipeline and dbt run
 
 on:
   schedule:
-    - cron: "0 6 1 1,7 *" # Every Jan 1 and July 1 at 3 AM UTC
+    - cron: "0 6 1 1,7 *" # Every Jan 1 and July 1 at 6 AM UTC
   push:
     branches: [main]
 
@@ -19,13 +19,18 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install dependencies
+      - name: Create and activate virtual environment, install dependencies
+        timeout-minutes: 10
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt --verbose
 
       - name: Run ELT script
-        run: python elt/main.py
+        run: |
+          source venv/bin/activate
+          python elt/main.py
         env:
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
@@ -42,4 +47,6 @@ jobs:
           DBT_PROFILES_YML: ${{ secrets.DBT_PROFILES_YML }}
 
       - name: Run dbt models
-        run: dbt run --project-dir elt/fars_dbt
+        run: |
+          source venv/bin/activate
+          dbt run --project-dir elt/fars_dbt
