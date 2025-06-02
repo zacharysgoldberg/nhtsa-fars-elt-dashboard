@@ -8,7 +8,7 @@ on:
 
 jobs:
   run-elt-and-dbt:
-    runs-on: [self-hosted, Linux, nhtsa-elt-runner]
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repo
