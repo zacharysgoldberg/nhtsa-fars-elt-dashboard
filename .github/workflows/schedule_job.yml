@@ -1,17 +1,14 @@
 name: Scheduled ELT pipeline and dbt run
 
 on:
-  push:
-    branches:
-      - main
-
   schedule:
-    # Runs at 3 AM UTC on the 1st day of January and July (every 6 months)
-    - cron: "0 6 1 1,7 *"
+    - cron: "0 3 1 1,7 *" # Every Jan 1 and July 1 at 3 AM UTC
+  push:
+    branches: [main]
 
 jobs:
   run-elt-and-dbt:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, nhtsa-elt-runner]
 
     steps:
       - name: Checkout repo
@@ -28,10 +25,16 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run ELT script
-        run: |
-          python elt/main.py
+        run: python elt/main.py
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
 
-      - name: Setup profiles.yml
+      - name: Setup dbt profiles.yml
         run: |
           mkdir -p ~/.dbt
           echo "$DBT_PROFILES_YML" > ~/.dbt/profiles.yml
@@ -39,5 +42,4 @@ jobs:
           DBT_PROFILES_YML: ${{ secrets.DBT_PROFILES_YML }}
 
       - name: Run dbt models
-        run: |
-          dbt run --project-dir elt/fars_dbt
+        run: dbt run --project-dir elt/fars_dbt
