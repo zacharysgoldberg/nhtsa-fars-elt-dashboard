@@ -1,0 +1,39 @@
+name: Scheduled ELT pipeline and dbt run
+
+on:
+  schedule:
+    # Runs at 3 AM UTC on the 1st day of January and July (every 6 months)
+    - cron: "0 6 1 1,7 *"
+
+jobs:
+  run-elt-and-dbt:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ELT script
+        run: |
+          python elt/main.py
+
+      - name: Setup profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          echo "$DBT_PROFILES_YML" > ~/.dbt/profiles.yml
+        env:
+          DBT_PROFILES_YML: ${{ secrets.DBT_PROFILES_YML }}
+
+      - name: Run dbt models
+        run: |
+          dbt run --project-dir elt/fars_dbt
