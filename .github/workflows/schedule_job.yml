@@ -1,6 +1,10 @@
 name: Scheduled ELT pipeline and dbt run
 
 on:
+  push:
+    branches:
+      - main
+
   schedule:
     # Runs at 3 AM UTC on the 1st day of January and July (every 6 months)
     - cron: "0 6 1 1,7 *"
