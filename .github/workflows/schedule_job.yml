@@ -2,13 +2,13 @@ name: Scheduled ELT pipeline and dbt run
 
 on:
   schedule:
-    - cron: "0 3 1 1,7 *" # Every Jan 1 and July 1 at 3 AM UTC
+    - cron: "0 6 1 1,7 *" # Every Jan 1 and July 1 at 3 AM UTC
   push:
     branches: [main]
 
 jobs:
   run-elt-and-dbt:
-    runs-on: [self-hosted, nhtsa-elt-runner]
+    runs-on: [self-hosted, Linux, nhtsa-elt-runner]
 
     steps:
       - name: Checkout repo
