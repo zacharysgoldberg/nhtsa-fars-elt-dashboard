@@ -7,8 +7,8 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 ## Project Overview
 
 - Ingests updated FARS data
-- Loads raw datasets into a PostgreSQL data warehouse hosted on Azure
-- Processes and transforms data using Python scripts and dbt for standardization, cleaning, and modeling
+- Loads raw datasets into a blob storage hosted on Azure
+- Processes and transforms data using Python scripts for standardization, cleaning, and dbt for modeling
 - Presents insights using Apache Superset dashboards
 - Automatically runs pipeline, including dbt models, and updates dashboard every six months using an Apache Airflow DAG
 
@@ -24,7 +24,7 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
   - Download newly available CSVs
   - Load the raw data into Azure Blob storage
   - Transform raw data using Python scripts
-  - Finally, makes data dashboard ready by running dbt model transformations
+  - Finally, updates dashboard by running dbt model transformations
 
 ### 2. **Transform**
 
@@ -41,24 +41,25 @@ This project delivers a complete ELT (Extract, Load, Transform) pipeline and ana
 
 ### 3. **Visualization**
 
-- **Apache Superset** connects to the modeled data schema
+- **Apache Superset** connects to the modeled database schema
 - Dashboards include:
   - Fatalities by conditions and demographics
+  - Summary of accident event details per vehicles involved
   - Trend analysis over multiple years
 
 ---
 
 ## Tools & Technologies
 
-| Tool                | Role                                                                                    |
-| ------------------- | --------------------------------------------------------------------------------------- |
-| **Apache Airflow**  | Orchestrates and schedules the ELT workflow                                             |
-| **Python**          | Handles ingestion, cleaning, and initial transformation of raw CSVs                     |
-| **Azure Blob**      | Stores raw CSV file data                                                                |
-| **PostgreSQL**      | Stores processed and transformed data                                                   |
-| **dbt**             | Builds analysis-ready models and performs data testing                                  |
-| **Apache Superset** | Hosts interactive dashboards for visualization and exploration                          |
-| **Docker**          | Containerizes Superset, Airflow, and Postgres databases for both FARS and Superset data |
+| Tool                | Role                                                                                             |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| **Apache Airflow**  | Orchestrates and schedules the ELT workflow                                                      |
+| **Python**          | Handles ingestion, cleaning, and initial transformation of raw CSVs                              |
+| **Azure Blob**      | Stores raw CSV file data                                                                         |
+| **PostgreSQL**      | Stores processed and transformed data                                                            |
+| **dbt**             | Builds analysis-ready models and performs data testing                                           |
+| **Apache Superset** | Hosts interactive dashboards for visualization and exploration                                   |
+| **Docker**          | Containerizes Superset, Airflow, and Postgres databases for both FARS data and Superset metadata |
 
 ---
 
@@ -69,4 +70,4 @@ To view the dashboard and metrics, **sign in using the public credentials below*
 - **Username:** `User`
 - **Password:** `password`
 
-> ⚠️ **Note:** It may take a minute for Render to spin up Apache Superset. Please be patient!
+> ⚠️ **Note:** It may take several minutes for Render to spin up Apache Superset. Please be patient!

@@ -4,3 +4,5 @@ venv/
 .env
 elt/data/
 superset/docker-compose.yml
+airflow/docker-compose.yml
+airflow/logs
