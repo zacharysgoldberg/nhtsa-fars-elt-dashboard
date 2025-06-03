@@ -16,7 +16,8 @@ jobs:
 
       - name: Create and activate virtual environment
         run: |
-          python3.9 -m venv venv
+          PYTHON_PATH="/home/zachG/.pyenv/shims/python3.9"
+          $PYTHON_PATH -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
 
