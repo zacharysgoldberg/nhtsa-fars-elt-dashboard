@@ -24,8 +24,7 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
             f.write(response.content)
         print(f"Downloaded: {zip_path}")
     except requests.RequestException as e:
-        print(f"[ERROR] Failed to download data for {year}: {e}")
-        sys.exit(1)
+        raise RuntimeError(f"Failed to download data for {year}: {e}")
 
     extracted_files = {}
 
@@ -36,9 +35,8 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
                                   for name in zf.namelist())
 
             if not expected_files & available_files:
-                print(
-                    f"[ERROR] Expected files not found in ZIP archive for {year}")
-                sys.exit(1)
+                raise RuntimeError(
+                    f"Expected files not found in ZIP archive for {year}")
 
             for member in zf.namelist():
                 filename = Path(member).name.lower()
@@ -66,10 +64,10 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
                     extracted_files[filename.split('.')[0]] = blob_path
 
     except zipfile.BadZipFile as e:
-        print(f"[ERROR] Failed to extract {zip_path}: {e}")
-        sys.exit(1)
+        raise RuntimeError(f"Failed to extract {zip_path}: {e}")
 
     finally:
+        # Clean up temp directory for the year (not individual files)
         if temp_path.exists():
             shutil.rmtree(temp_path)
             print(f"Remove temporary dir: {temp_path}")
