@@ -14,18 +14,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-
-      - name: Create and activate virtual environment, install dependencies
-        timeout-minutes: 10
+      - name: Create and activate virtual environment
         run: |
-          python -m venv venv
+          python3.9 -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
-          pip install -r requirements.txt --verbose
+
+      - name: Install dependencies
+        run: |
+          source venv/bin/activate
+          pip install -r requirements.txt
 
       - name: Run ELT script
         run: |
