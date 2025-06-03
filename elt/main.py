@@ -1,5 +1,6 @@
-from datetime import datetime
 import psycopg2
+import os
+from datetime import datetime
 from db.init_db import init_db
 from ingest.get_fars_data import download_and_extract_fars_data, load_data
 from process.clean_fars_data import clean_accident_data, clean_vehicle_data
@@ -16,6 +17,9 @@ def main():
     # --- Download (Extract and Load) raw data into Blob Storage ---
     current_year = datetime.now().year
     target_year = current_year - 1  # FARS data is typically published the year after
+
+    print(
+        f"AZURE_CONNECTION_STRING length: {len(os.getenv('AZURE_STORAGE_CONNECTION_STRING') or '')}")
 
     blob_service_client = BlobServiceClient.from_connection_string(
         AZURE_STORAGE_CONNECTION_STRING)
