@@ -10,7 +10,7 @@ from util.helpers import upload_to_blob
 
 
 def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceClient) -> dict:
-    url = f"https://static.nhtsa.gov/nhtsa/downloads/FARS/{year}/National/FARS{year}NationalCSV.zip"
+    url = f"https://www.nhtsa.gov/file-downloads?p=nhtsa/downloads/FARS/{year}/National/FARS{year}NationalCSV.zip"
 
     temp_dir = "tmp/fars_data"
     year_dir = Path(temp_dir) / str(year)
@@ -23,6 +23,7 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
         with open(zip_path, "wb") as f:
             f.write(response.content)
         print(f"Downloaded: {zip_path}")
+
     except requests.RequestException as e:
         raise RuntimeError(f"Failed to download data for {year}: {e}")
 
