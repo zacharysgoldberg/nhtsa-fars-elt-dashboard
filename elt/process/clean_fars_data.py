@@ -2,16 +2,17 @@ import pandas as pd
 from io import StringIO
 from azure.storage.blob import BlobServiceClient
 
+CONTAINER_NAME = 'processed-data'
+ACCIDENT_BLOB_PATH = 'cleaned/cleaned_accident.csv'
+VEHICLE_BLOB_PATH = 'cleaned/cleaned_vehicle.csv'
+
 
 def clean_accident_data(df: pd.DataFrame, blob_service_client: BlobServiceClient) -> pd.DataFrame:
-    container_name = 'processed-data'
-    blob_path = 'cleaned/cleaned_accident.csv'
-
-    # 1. Remove columns with >= 50% missing values
+    # Remove columns with >= 50% missing values
     threshold = 0.5 * len(df)
     df_cleaned = df.dropna(axis=1, thresh=threshold)
 
-    # 2. Drop unnecessary columns if they exist
+    # Drop unnecessary columns if they exist
     columns_to_drop = [
         'tway_id', 'tway_id2', 'weather1', 'weather2',
         'cf1', 'cf2', 'cf3', 'Ã¯Â»Â¿state'
@@ -21,29 +22,26 @@ def clean_accident_data(df: pd.DataFrame, blob_service_client: BlobServiceClient
         errors='ignore'
     )
 
-    # 3. Upload cleaned data to Azure Blob Storage
+    # Upload cleaned data to Azure Blob Storage
     try:
         csv_buffer = StringIO()
         df_cleaned.to_csv(csv_buffer, index=False)
 
         processed_client = blob_service_client.get_container_client(
-            container_name)
-        processed_client.get_blob_client(blob_path).upload_blob(
+            CONTAINER_NAME)
+        processed_client.get_blob_client(ACCIDENT_BLOB_PATH).upload_blob(
             csv_buffer.getvalue(), overwrite=True
         )
 
         print(
-            f"\n✅ Cleaned accident data uploaded to Azure at {container_name}/{blob_path}\n")
+            f"\n✅ Cleaned accident data uploaded to Azure Blob at {CONTAINER_NAME}/{ACCIDENT_BLOB_PATH}\n")
     except Exception as e:
-        print(f"❌ Failed to upload cleaned accident data to Azure: {e}")
+        print(f"❌ Failed to upload cleaned accident data to Azure Blob: {e}")
 
     return df_cleaned
 
 
 def clean_vehicle_data(df: pd.DataFrame, blob_service_client: BlobServiceClient) -> pd.DataFrame:
-    container_name = 'processed-data'
-    blob_path = 'cleaned/cleaned_vehicle.csv'
-
     # Remove columns with 50% or more missing values
     threshold = 0.5 * len(df)  # 50% of the total rows
     df_cleaned = df.dropna(axis=1, thresh=threshold)
@@ -85,14 +83,14 @@ def clean_vehicle_data(df: pd.DataFrame, blob_service_client: BlobServiceClient)
         df_cleaned.to_csv(csv_buffer, index=False)
 
         processed_client = blob_service_client.get_container_client(
-            container_name)
-        processed_client.get_blob_client(blob_path).upload_blob(
+            CONTAINER_NAME)
+        processed_client.get_blob_client(VEHICLE_BLOB_PATH).upload_blob(
             csv_buffer.getvalue(), overwrite=True
         )
 
         print(
-            f"\n✅ Cleaned accident data uploaded to Azure at {container_name}/{blob_path}\n")
+            f"\n✅ Cleaned accident data uploaded to Azure Blob at {CONTAINER_NAME}/{VEHICLE_BLOB_PATH}\n")
     except Exception as e:
-        print(f"❌ Failed to upload cleaned accident data to Azure: {e}")
+        print(f"❌ Failed to upload cleaned accident data to Azure Blob: {e}")
 
     return df_cleaned

@@ -141,7 +141,7 @@ def save_to_db(df: pd.DataFrame, table: str, conn: connection):
 
         cursor.execute(insert_sql)
         conn.commit()
-        print(f"Saved {len(df):,} records to the '{table}' table.")
+        print(f"Saved/Wrote {len(df):,} records to the '{table}' table.")
 
     except Exception as e:
         conn.rollback()
