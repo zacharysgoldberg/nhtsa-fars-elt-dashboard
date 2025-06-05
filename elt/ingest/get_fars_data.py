@@ -74,9 +74,9 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
 
     finally:
         # Clean up temp directory for the year (not individual files)
-        if temp_path.exists():
-            shutil.rmtree(temp_path)
-            print(f"Remove temporary dir: {temp_path}")
+        if year_dir.exists():
+            shutil.rmtree(year_dir)
+            print(f"Remove temporary dir: {year_dir}")
 
     return extracted_files
 
