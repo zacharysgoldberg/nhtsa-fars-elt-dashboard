@@ -1,9 +1,9 @@
 import requests
 import zipfile
+import shutil
 import pandas as pd
 from pathlib import Path
 from io import BytesIO, StringIO
-import shutil
 from azure.storage.blob import BlobServiceClient, ContainerClient
 from util.helpers import upload_to_blob
 

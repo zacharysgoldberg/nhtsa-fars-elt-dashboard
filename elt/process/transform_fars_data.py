@@ -1,7 +1,7 @@
 import pandas as pd
 from io import StringIO
 from azure.storage.blob import BlobServiceClient
-from elt.ingest.get_fars_data import load_blob_file_names, load_raw_data
+from ingest.get_fars_data import load_blob_file_names, load_raw_data
 from util.helpers import upload_to_blob
 
 CONTAINER_NAME = 'processed-data'

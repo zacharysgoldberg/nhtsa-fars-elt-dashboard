@@ -1,6 +1,7 @@
 # NHTSA FARS ELT Dashboard
 
 This project delivers a complete ELT (Extract, Load, Transform) pipeline and analytics dashboard for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS) data.
+
 It streamlines data ingestion, transformation, and visualization to provide meaningful insights into traffic fatality trends across the United States.
 
 ---
