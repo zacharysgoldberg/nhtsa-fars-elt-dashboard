@@ -16,26 +16,14 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
     year_dir.mkdir(parents=True, exist_ok=True)
     zip_path = year_dir / f"FARS{year}NationalCSV.zip"
 
-    try:
-        response = requests.get(url, timeout=60)
-        response.raise_for_status()
-        with open(zip_path, "wb") as f:
-            f.write(response.content)
-
-        print(f"Downloaded: {zip_path}")
-
-    except requests.RequestException as e:
-        # Clean up temp directory for the year (not individual files)
-        if year_dir.exists():
-            shutil.rmtree(year_dir)
-            print(f"Remove temporary dir: {year_dir}")
-
-        print(f"Failed to download data for {year}: {e}")
-        return
-
     extracted_files = {}
 
     try:
+        response = requests.get(url, timeout=60)
+        response.raise_for_status()
+        zip_path.write_bytes(response.content)
+        print(f"Downloaded: {zip_path}")
+
         with zipfile.ZipFile(zip_path, 'r') as zf:
             expected_files = {"accident.csv", "vehicle.csv"}
             available_files = set(Path(name).name.lower()
@@ -49,9 +37,8 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
                 filename = Path(member).name.lower()
                 if filename in expected_files:
                     temp_path = year_dir / filename
-                    with zf.open(member) as source:
-                        with open(temp_path, "wb") as target:
-                            target.write(source.read())
+                    with zf.open(member) as source, open(temp_path, "wb") as target:
+                        target.write(source.read())
                     print(f"Extracted: {temp_path}")
 
                     if filename == "vehicle.csv":
@@ -62,22 +49,20 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
                         print(
                             f"Appended 'year' column to vehicle.csv for {year}")
 
-                    # Upload to blob storage
+                    # Upload raw data to blob storage
                     blob_path = f"{year}/{filename}"
-
                     upload_to_blob(
                         temp_path, blob_path, blob_service_client, container_name='raw-data')
-
                     extracted_files[filename.split('.')[0]] = blob_path
 
-    except zipfile.BadZipFile as e:
-        raise RuntimeError(f"Failed to extract {zip_path}: {e}")
+    except (requests.RequestException, zipfile.BadZipFile) as e:
+        print(f"Error processing data for {year}: {e}")
+        # raise RuntimeError(f"Data pipeline failure for {year}: {e}")
 
     finally:
-        # Clean up temp directory for the year (not individual files)
         if year_dir.exists():
             shutil.rmtree(year_dir)
-            print(f"Remove temporary dir: {year_dir}")
+            print(f"Cleaned up: {year_dir}")
 
     return extracted_files
 
