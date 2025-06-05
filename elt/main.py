@@ -37,10 +37,10 @@ def main():
         print(
             f"\nℹ️ Year {target_year} already downloaded. Skipping download.\n")
 
-    # Proceed regardless of download failure
     ''' Transform '''
 
     try:
+        print("Proceeding with data transformation, regardless of download failure")
         standardized_accident_df = standardize_fars_accident_data(
             blob_service_client)
         standardized_vehicle_df = standardize_fars_vehicle_data(

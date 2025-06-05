@@ -21,6 +21,7 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
         response.raise_for_status()
         with open(zip_path, "wb") as f:
             f.write(response.content)
+
         print(f"Downloaded: {zip_path}")
 
     except requests.RequestException as e:
@@ -28,7 +29,8 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
         if year_dir.exists():
             shutil.rmtree(year_dir)
             print(f"Remove temporary dir: {year_dir}")
-        raise RuntimeError(f"Failed to download data for {year}: {e}")
+
+        print(f"Failed to download data for {year}: {e}")
 
     extracted_files = {}
 
