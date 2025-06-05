@@ -46,8 +46,8 @@ It streamlines data ingestion, transformation, and visualization to provide mean
 - **Apache Superset** connects to the modeled database schema
 - Dashboards include:
   - Fatalities by conditions and demographics
-  - Summary of accident event details per vehicles involved
-  - Trend analysis over multiple years
+  - Summarizes accidents by locality and vehicle types
+  - Alcohol related accidents with trend analysis over multiple years
 
 ---
 
