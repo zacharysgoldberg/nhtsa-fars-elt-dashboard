@@ -38,8 +38,9 @@ def main():
             f"\nℹ️ Year {target_year} already downloaded. Skipping download.\n")
 
     # Proceed regardless of download failure
+    ''' Transform '''
+
     try:
-        ''' Transform '''
         standardized_accident_df = standardize_fars_accident_data(
             blob_service_client)
         standardized_vehicle_df = standardize_fars_vehicle_data(

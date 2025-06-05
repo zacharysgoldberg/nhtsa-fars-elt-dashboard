@@ -10,22 +10,28 @@ jobs:
   run-elt-and-dbt:
     runs-on: self-hosted
 
-    timeout-minutes: 10
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Create and activate virtual environment
+      - name: Cache Python virtual environment
+        uses: actions/cache@v3
+        timeout-minutes: 5
+        with:
+          path: venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-
+
+      - name: Create and activate virtual environment if not cached
+        timeout-minutes: 5
         run: |
           PYTHON_PATH="/home/zachG/.pyenv/shims/python3.9"
-          $PYTHON_PATH -m venv venv
+          if [ ! -d "venv" ]; then
+            $PYTHON_PATH -m venv venv
+          fi
           source venv/bin/activate
           pip install --upgrade pip
-
-      - name: Install dependencies
-        run: |
-          source venv/bin/activate
           pip install -r requirements.txt
 
       - name: Run ELT script
@@ -41,6 +47,7 @@ jobs:
           python elt/main.py
 
       - name: Setup dbt profiles.yml
+        timeout-minutes: 5
         env:
           DBT_PROFILES_YML: ${{ secrets.DBT_PROFILES_YML }}
         run: |
