@@ -3,7 +3,6 @@ from psycopg2 import sql
 from psycopg2.extras import execute_batch
 from psycopg2.extensions import connection
 import pandas as pd
-from typing import Literal
 
 
 # def save_to_db(df: pd.DataFrame, table: str, conn: connection):
