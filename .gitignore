@@ -3,6 +3,7 @@ venv/
 .vscode/
 .env
 elt/data/
+elt/tmp
 superset/docker-compose.yml
 airflow/docker-compose.yml
 airflow/logs
