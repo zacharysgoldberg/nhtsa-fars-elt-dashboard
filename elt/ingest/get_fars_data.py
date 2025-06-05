@@ -31,6 +31,7 @@ def download_and_extract_fars_data(year: int, blob_service_client: BlobServiceCl
             print(f"Remove temporary dir: {year_dir}")
 
         print(f"Failed to download data for {year}: {e}")
+        return
 
     extracted_files = {}
 
