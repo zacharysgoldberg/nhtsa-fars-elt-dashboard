@@ -59,7 +59,7 @@ It streamlines data ingestion, transformation, and visualization to provide mean
 | **Python**          | Handles ingestion, cleaning, and initial transformation of raw CSVs                              |
 | **Azure Blob**      | Stores raw CSV file data                                                                         |
 | **PostgreSQL**      | Stores processed and transformed data                                                            |
-| **dbt**             | Builds analysis-ready models and performs data testing                                           |
+| **dbt Core**             | Builds analysis-ready models and performs data testing                                           |
 | **Apache Superset** | Hosts interactive dashboards for visualization and exploration                                   |
 | **Docker**          | Containerizes Superset, Airflow, and Postgres databases for both FARS data and Superset metadata |
 
