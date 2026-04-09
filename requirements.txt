@@ -22,8 +22,8 @@ pip
 requests
 setuptools
 python-dotenv
-psycopg2-binary
+pyodbc
 dbt-core 
-dbt-postgres
+dbt-sqlserver
 azure-storage-blob
 #apache-airflow

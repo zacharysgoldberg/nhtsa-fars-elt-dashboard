@@ -1,18 +1,19 @@
 # NHTSA FARS ELT Dashboard
 
-This project delivers a complete ELT (Extract, Load, Transform) pipeline and analytics dashboard for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS) data.
+This project delivers a cloud-based ELT pipeline and analytics stack for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS) data.
 
-It streamlines data ingestion, transformation, and visualization to provide meaningful insights into traffic fatality trends across the United States.
+It ingests FARS source files, standardizes and cleans them with Python, lands curated CSV outputs in Azure Blob Storage, loads them into Azure SQL Database through Azure Data Factory, models them with dbt, and prepares the data for Power BI reporting.
 
 ---
 
 ## Project Overview
 
 - Ingests updated FARS data
-- Loads raw datasets into a blob storage hosted on Azure
-- Processes and transforms data using Python scripts for standardization, cleaning, and dbt for modeling
-- Presents insights using Apache Superset dashboards
-- Automatically runs pipeline, including dbt models, and updates dashboard every six months using an Apache Airflow DAG
+- Stores raw and cleaned datasets in Azure Blob Storage
+- Uses Python for extraction, standardization, and cleaning
+- Uses Azure Data Factory to load cleaned files into Azure SQL staging tables and merge them into production tables
+- Uses dbt to build staging, intermediate, fact, and mart models in Azure SQL
+- Uses Power BI as the reporting layer on top of the modeled warehouse
 
 ---
 
@@ -21,30 +22,35 @@ It streamlines data ingestion, transformation, and visualization to provide mean
 ### 1. **Extract & Load**
 
 - Data is sourced from NHTSA’s public FARS CSV datasets.
-- An **Apache Airflow** DAG runs every six months to:
-  - Check for new FARS data releases
-  - Download newly available CSVs
-  - Load the raw data into Azure Blob storage
-  - Transform raw data using Python scripts
-  - Finally, updates dashboard by running dbt model transformations
+- The Python pipeline:
+  - Downloads the annual FARS ZIP files
+  - Extracts `accident.csv` and `vehicle.csv`
+  - Uploads raw source files to the `raw-data` Azure Blob container
+  - Standardizes and cleans the files
+  - Uploads cleaned outputs to the `processed-data/cleaned/` Blob path
+  - Publishes an ADF handoff manifest for downstream loading
 
 ### 2. **Transform**
 
-- **Python scripts** perform initial processing to:
+- **Azure Data Factory** performs the loading step by:
+  - Clearing Azure SQL staging tables
+  - Copying cleaned Blob files into `dbo.accident_stage` and `dbo.vehicle_stage`
+  - Running stored procedures to merge staged rows into `dbo.accident` and `dbo.vehicle`
 
-  - Standardizes column names and table structures across years
-  - Cleans data by handling missing values, fixing data types, and decoding coded fields
-  - Writes cleaned data to Azure Blob as combined CSV files, and PostgreSQL for analysis
+- **Python scripts** perform preprocessing to:
+  - Standardize column names and table structures across years
+  - Clean data by handling missing values, fixing data types, and decoding coded fields
+  - Write cleaned files to Azure Blob for ADF ingestion
 
-- **dbt** performs further transformations inside PostgreSQL to:
+- **dbt** performs further transformations inside Azure SQL to:
   - Define staging, intermediate, and data mart models
   - Create optimized tables and views for analytics
   - Apply data quality and integrity tests
 
 ### 3. **Visualization**
 
-- **Apache Superset** connects to the modeled database schema
-- Dashboards include:
+- **Power BI** connects to Azure SQL reporting objects built from the dbt models
+- Reports include:
   - Fatalities by conditions and demographics
   - Summarizes accidents by locality and vehicle types
   - Alcohol related accidents with trend analysis over multiple years
@@ -53,23 +59,31 @@ It streamlines data ingestion, transformation, and visualization to provide mean
 
 ## Tools & Technologies
 
-| Tool                | Role                                                                                             |
-| ------------------- | ------------------------------------------------------------------------------------------------ |
-| **Apache Airflow**  | Orchestrates and schedules the ELT workflow                                                      |
-| **Python**          | Handles ingestion, cleaning, and initial transformation of raw CSVs                              |
-| **Azure Blob**      | Stores raw CSV file data                                                                         |
-| **PostgreSQL**      | Stores processed and transformed data                                                            |
-| **dbt**             | Builds analysis-ready models and performs data testing                                           |
-| **Apache Superset** | Hosts interactive dashboards for visualization and exploration                                   |
-| **Docker**          | Containerizes Superset, Airflow, and Postgres databases for both FARS data and Superset metadata |
+| Tool                     | Role                                                                               |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| **Python**               | Handles ingestion, cleaning, and initial transformation of raw CSVs                |
+| **Azure Blob**           | Stores raw CSV file data                                                           |
+| **Azure Data Factory**   | Loads cleaned files from Blob into Azure SQL staging and executes merge procedures |
+| **Microsoft SQL Server** | Stores staged, integrated, and transformed data in Azure                           |
+| **dbt Core**             | Builds analysis-ready models and performs data testing                             |
+| **Power BI**             | Builds interactive reports and dashboards from the curated MSSQL reporting schema  |
+| **Apache Airflow**       | Can orchestrate the ELT and downstream modeling workflow                           |
+| **Docker**               | Supports local orchestration and development tooling                               |
 
 ---
 
-## Dashboard Link and Sign In: [Superset Dashboard](https://nhtsa-fars-elt-dashboard.onrender.com/superset/dashboard/p/QaKezOZEDkd/)
+## Current Architecture
 
-To view the dashboard and metrics, **sign in using the public credentials below**:
+1. Python downloads and cleans FARS data.
+2. Cleaned CSV files are published to Azure Blob.
+3. Azure Data Factory copies those files into Azure SQL staging tables.
+4. Stored procedures merge staged rows into `dbo.accident` and `dbo.vehicle`.
+5. dbt transforms Azure SQL source tables into analytics-ready models.
+6. Power BI reads from the modeled warehouse.
 
-- **Username:** `User`
-- **Password:** `password`
+## Repository Notes
 
-> ⚠️ **Note:** It may take several minutes for Render to spin up Apache Superset. Please be patient!
+- [`elt/main.py`](c:\Users\Goldb\Desktop\Repos\NHTSA-analytics-workflow\elt\main.py) now stops at the ADF handoff rather than bulk-inserting directly into Azure SQL.
+- [`elt/bootstrap_adf_assets.py`](c:\Users\Goldb\Desktop\Repos\NHTSA-analytics-workflow\elt\bootstrap_adf_assets.py) bootstraps the Azure SQL tables, staging tables, and stored procedures used by ADF.
+
+## Dashboard Link: [link](powerbi_link)
