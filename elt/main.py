@@ -1,22 +1,21 @@
 import sys
-import psycopg2
 import traceback
 from datetime import datetime
-from db.init_db import init_db
-from ingest.get_fars_data import download_and_extract_fars_data, load_processed_data
+from ingest.get_fars_data import download_and_extract_fars_data
 from process.clean_fars_data import clean_accident_data, clean_vehicle_data
 from process.transform_fars_data import standardize_fars_accident_data, standardize_fars_vehicle_data
-from storage.save_data import save_to_db
-from util.helpers import should_download_year, get_latest_downloaded_year
+from elt.storage.publish_to_adf import publish_adf_manifest
+from util.helpers import should_download_year
 from azure.storage.blob import BlobServiceClient
-from config.config import AZURE_STORAGE_CONNECTION_STRING, DB_CONFIG
+from config.config import AZURE_STORAGE_CONNECTION_STRING
 
 
 def main():
     ''' Extract and Load '''
 
     current_year = datetime.now().year
-    target_year = current_year - 1
+    # target_year = current_year - 1
+    target_year = 2023
 
     extracted_files = {}
 
@@ -41,7 +40,7 @@ def main():
             f"\n✅ Downloaded and extracted data for year {target_year}.\n")
         try:
             print(
-                "\nProceeding with data transformation\n")
+                "\nProceeding with data transformations\n")
             standardized_accident_df = standardize_fars_accident_data(
                 blob_service_client)
             standardized_vehicle_df = standardize_fars_vehicle_data(
@@ -51,12 +50,15 @@ def main():
                 standardized_accident_df, blob_service_client)
             cleaned_vehicle_df = clean_vehicle_data(
                 standardized_vehicle_df, blob_service_client)
-
-            conn = psycopg2.connect(**DB_CONFIG)
-            init_db(cleaned_accident_df, cleaned_vehicle_df, conn)
-            save_to_db(cleaned_accident_df, 'accident', conn)
-            save_to_db(cleaned_vehicle_df, 'vehicle', conn)
-            conn.close()
+            publish_adf_manifest(
+                blob_service_client=blob_service_client,
+                target_year=target_year,
+                accident_rows=len(cleaned_accident_df),
+                vehicle_rows=len(cleaned_vehicle_df),
+            )
+            print(
+                "\nADF handoff complete. Load the cleaned Blob files into Azure SQL staging with Azure Data Factory.\n"
+            )
 
         except Exception as e:
             print(f"\n❌ Error during transform/load phases: {e}")

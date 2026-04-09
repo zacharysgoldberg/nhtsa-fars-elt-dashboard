@@ -11,8 +11,8 @@ body_type_summary AS (
     SELECT
         body_typ,
         count(*) AS total_vehicles,
-        sum(case when rolled_over then 1 else 0 end) as rollover_count,
-        sum(case when towed then 1 else 0 end) as towed_count,
+        sum(case when rolled_over = 1 then 1 else 0 end) as rollover_count,
+        sum(case when towed = 1 then 1 else 0 end) as towed_count,
         sum(deaths) as total_deaths,
         round(avg(travel_spd_mph), 2) as avg_travel_speed
     from vehicle_data
@@ -35,4 +35,3 @@ percentages as (
 )
 
 select * from percentages
-order by total_vehicles desc

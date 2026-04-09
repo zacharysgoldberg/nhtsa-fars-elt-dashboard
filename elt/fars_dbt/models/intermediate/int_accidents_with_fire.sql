@@ -6,7 +6,7 @@ with fire_vehicles as (
         accident_id,
         count(*) as vehicles_with_fire
     from {{ ref('stg_vehicle') }}
-    where fire_or_explosion = True
+    where fire_or_explosion = 1
     group by accident_id
 )
 

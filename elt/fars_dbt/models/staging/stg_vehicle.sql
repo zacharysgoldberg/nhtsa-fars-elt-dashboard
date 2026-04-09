@@ -5,43 +5,43 @@ select
     id as vehicle_id,
     accident_id,
     st_case,
-    cast(numoccs as integer) as num_of_occupants,
-    cast(year as integer) as year,
-    cast(month as integer) as month,
-    cast(day as integer) as day,
-    cast(hour as integer) as hour,
-    cast(minute as integer) as minute,
+    try_cast(numoccs as int) as num_of_occupants,
+    try_cast(year as int) as year,
+    try_cast(month as int) as month,
+    try_cast(day as int) as day,
+    try_cast(hour as int) as hour,
+    try_cast(minute as int) as minute,
     state,
     harm_ev,
     man_coll as collision_manner,
     unittype,
 
     case 
-        when hit_run ilike 'yes' then TRUE
-        else FALSE
+        when lower(hit_run) = 'yes' then cast(1 as bit)
+        else cast(0 as bit)
     end as hit_and_run,
 
     owner,
     make,
     model,
-    cast(mod_year as integer) as model_year,
+    try_cast(mod_year as int) as model_year,
     body_typ,
     vin,
-    cast(j_knife as BOOLEAN) as jackknifed,
-    cast(tow_veh as BOOLEAN) as towed,
+    try_cast(j_knife as bit) as jackknifed,
+    try_cast(tow_veh as bit) as towed,
 
     case 
-        when haz_inv ilike 'yes' then TRUE
-        else FALSE
+        when lower(haz_inv) = 'yes' then cast(1 as bit)
+        else cast(0 as bit)
     end as hazmat_involved,
 
     bus_use,
     spec_use as special_use,
-    cast(trav_sp as integer) as travel_spd_mph,
+    try_cast(trav_sp as int) as travel_spd_mph,
 
     case 
-        when rollover ilike 'Rollover, Tripped by Object/Vehicle' then TRUE
-        else FALSE
+        when rollover like 'Rollover, Tripped by Object/Vehicle' then cast(1 as bit)
+        else cast(0 as bit)
     end as rolled_over,
 
     rolinloc as rollover_location,
@@ -50,16 +50,15 @@ select
     m_harm as main_harmful_event,
 
     case 
-        when fire_exp ilike 'yes' then TRUE
-        else FALSE
+        when lower(fire_exp) = 'yes' then cast(1 as bit)
+        else cast(0 as bit)
     end as fire_or_explosion,
 
-    cast(deaths as integer) as deaths,
+    try_cast(deaths as int) as deaths,
 
     case 
-        when dr_drink ilike 'yes' then TRUE
-        else FALSE
+        when lower(dr_drink) = 'yes' then cast(1 as bit)
+        else cast(0 as bit)
     end as driver_had_alcohol
 
-from public.vehicle
-
+from dbo.vehicle

@@ -10,4 +10,3 @@ from {{ ref('stg_accident') }}
 where weather_condition is not null
 and weather_condition not in ('Unknown', 'Not Reported', 'NOT APPLICABLE')
 group by weather_condition
-order by total_accidents desc

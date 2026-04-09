@@ -25,8 +25,8 @@ select
     man_coll as collision_manner,
 
     case 
-        when reljct1 ilike 'yes' then TRUE
-        else FALSE
+        when lower(reljct1) = 'yes' then cast(1 as bit)
+        else cast(0 as bit)
     end as at_junction,
 
     typ_int as intersection_type,
@@ -35,11 +35,11 @@ select
     weather as weather_condition,
 
     case 
-        when sch_bus ilike 'yes' then TRUE
-        else FALSE
+        when lower(sch_bus) = 'yes' then cast(1 as bit)
+        else cast(0 as bit)
     end as school_bus_involved,
 
     cast(drunk_dr as integer) as drunk_drivers,
     fatals as fatalities
-from public.accident
+from dbo.accident
 

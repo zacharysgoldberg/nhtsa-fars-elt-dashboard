@@ -108,7 +108,7 @@ def standardize_fars_accident_data(blob_service_client: BlobServiceClient) -> pd
 
 def standardize_fars_vehicle_data(blob_service_client: BlobServiceClient) -> pd.DataFrame:
     numeric_whitelist = {
-        'month', 'day', 'hour', 'minute', 'trav_sp', 'mod_year', 'dr_weight', 'tow_veh', 'j_knife'
+        'month', 'day', 'hour', 'minute', 'trav_sp', 'mod_year', 'dr_weight', 'tow_veh', 'j_knife', 'veh_no'
     }
 
     all_dfs = []
