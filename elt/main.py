@@ -4,7 +4,7 @@ from datetime import datetime
 from ingest.get_fars_data import download_and_extract_fars_data
 from process.clean_fars_data import clean_accident_data, clean_vehicle_data
 from process.transform_fars_data import standardize_fars_accident_data, standardize_fars_vehicle_data
-from elt.storage.publish_to_adf import publish_adf_manifest
+from storage.publish_to_adf import publish_adf_manifest
 from util.helpers import should_download_year
 from azure.storage.blob import BlobServiceClient
 from config.config import AZURE_STORAGE_CONNECTION_STRING
