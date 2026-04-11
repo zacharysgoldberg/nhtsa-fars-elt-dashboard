@@ -83,7 +83,6 @@ It ingests FARS source files, standardizes and cleans them with Python, lands cu
 
 ## Repository Notes
 
-- [`elt/main.py`](c:\Users\Goldb\Desktop\Repos\NHTSA-analytics-workflow\elt\main.py) now stops at the ADF handoff rather than bulk-inserting directly into Azure SQL.
 - [`elt/bootstrap_adf_assets.py`](c:\Users\Goldb\Desktop\Repos\NHTSA-analytics-workflow\elt\bootstrap_adf_assets.py) bootstraps the Azure SQL tables, staging tables, and stored procedures used by ADF.
 
 ## Dashboard Link: [link](powerbi_link)
