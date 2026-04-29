@@ -88,7 +88,7 @@ It ingests FARS source files, standardizes and cleans them with Python, lands cu
 
 ## Power BI Dashboard
 
-The interactive dashboard for this project is available as a Power BI Desktop file.
+The interactive dashboard for this project is available as a Power BI Desktop (pbix) file.
 
 ### Download
 
