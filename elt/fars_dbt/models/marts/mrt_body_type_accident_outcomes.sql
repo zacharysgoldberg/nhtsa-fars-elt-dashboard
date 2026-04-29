@@ -32,6 +32,24 @@ percentages as (
         round(100.0 * towed_count / total_vehicles, 2) as pct_towed,
         round(100.0 * total_deaths / nullif(total_vehicles, 0), 2) as pct_fatalities
     from body_type_summary
+),
+
+ranked_body_types as (
+    select
+        *,
+        row_number() over (order by total_vehicles desc) as rn
+    from percentages
 )
 
-select * from percentages
+select
+    body_typ,
+    total_vehicles,
+    rollover_count,
+    towed_count,
+    total_deaths,
+    avg_travel_speed,
+    pct_rollovers,
+    pct_towed,
+    pct_fatalities
+from ranked_body_types
+where rn <= 10

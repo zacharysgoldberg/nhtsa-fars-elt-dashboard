@@ -3,6 +3,6 @@
 
 select
     weather_condition,
-    round(avg(fatalities), 2) as avg_fatalities
+    round(avg(cast(fatalities as decimal(18, 2))), 2) as avg_fatalities
 from {{ ref('stg_accident') }}
 group by weather_condition
