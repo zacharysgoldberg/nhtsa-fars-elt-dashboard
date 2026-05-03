@@ -1,6 +1,6 @@
 # NHTSA FARS ELT Dashboard
 
-This project delivers a cloud-based ELT pipeline and analytics pipeline for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS) data.
+This project delivers a cloud-based ELT pipeline and analytics dashboard for the National Highway Traffic Safety Administration's (NHTSA) Fatality Analysis Reporting System (FARS) data.
 
 It ingests FARS source files, standardizes and cleans them with Python, lands curated CSV outputs in Azure Blob Storage, loads them into Azure SQL Database through Azure Data Factory, models them with dbt, and prepares the data for Power BI reporting.
 
