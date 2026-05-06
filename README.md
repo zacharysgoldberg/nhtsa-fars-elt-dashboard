@@ -75,7 +75,7 @@ It ingests FARS source files, standardizes and cleans them with Python, lands cu
 ## Current Architecture
 
 1. Python downloads and cleans/standardizes FARS data.
-2. Cleaned CSV files are published to Azure Blob.
+2. Cleaned CSV files are published to Azure Data Lake (Blob) Storage.
 3. Azure Data Factory copies those files into Azure SQL staging tables.
 4. Stored procedures merge staged rows into `dbo.accident` and `dbo.vehicle`.
 5. dbt transforms Azure SQL source tables into analytics-ready models.
